@@ -432,10 +432,10 @@ export default function ShowSubjects({showw}) {
     }
   }, [subjectItem]);
 
-  // useEffect(() => {
-  //   GetSubjectItems(page - 1, pageCount);
-  //   GetCategoryItem();
-  // }, [cmsContext.flagPublic, show]);
+  useEffect(() => {
+    GetSubjectItems(page - 1, pageCount);
+    GetCategoryItem();
+  }, [cmsContext.flagPublic, show]);
 
   useEffect(() => {
     if (!show) {

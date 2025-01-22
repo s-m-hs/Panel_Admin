@@ -132,9 +132,9 @@ const funcA=()=>{
   }
 
   //////////////////////////
-  // useEffect(() => {
-  //   GetCategoryItem()
-  // }, [])
+  useEffect(() => {
+    GetCategoryItem()
+  }, [])
   function handleChange(value){
     setValue4( value && value.toDate())
     // console.log(value.format());   /// convert  to persian format
