@@ -183,8 +183,8 @@ class ResizableHTMLBlot extends BlockEmbed {
     resizeHandle.style.position = 'absolute';
     resizeHandle.style.right = '0';
     resizeHandle.style.bottom = '0';
-    resizeHandle.style.width = '10px';
-    resizeHandle.style.height = '10px';
+    resizeHandle.style.width = '5px';
+    resizeHandle.style.height = '5px';
     resizeHandle.style.backgroundColor = '#000';
     resizeHandle.style.cursor = 'nwse-resize';
 

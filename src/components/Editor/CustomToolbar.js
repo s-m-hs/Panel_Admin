@@ -48,11 +48,11 @@ const CustomToolbar = ({onInsertHTML}) => (
 <button className="ql-align" value="justify" title="Justify Text"></button>
 
   
-  <button className="ql-link" title="Add Link"></button>
-  <button className="ql-video" title="Add Video"></button>
+  {/* <button className="ql-link" title="Add Link"></button> */}
+  {/* <button className="ql-video" title="Add Video"></button> */}
 
   <button className="ql-clean" title="Remove Formatting"></button>
-  <button className="ql-html" title="Insert HTML" onClick={onInsertHTML}></button>  
+  <button className="ql-html" title="Insert HTML"  onClick={onInsertHTML}><span className="centerr" style={{paddingLeft:'20px',justifyContent:'center,',alignItems:'center' ,fontSize:'12px',color:'#3c3a3a'}}><i class="fa-solid fa-film fa-md"></i>IFrame</span></button>  
     </div>
   );
   

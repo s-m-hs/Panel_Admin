@@ -33,7 +33,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 export default function ShowSubjects({showw}) {
   const [subjectItem, setSubjectItem] = useState([]);
   const [subjectItemitemList, setSubjectItemitemList] = useState([]);
-  const subjectItemRevers = subjectItemitemList.slice().reverse();
+  const subjectItemRevers = subjectItemitemList?.slice().reverse();
 
   // const subjectReverse = subjectItem.slice().reverse()
   const [show, setShow] = useState(false);
@@ -432,10 +432,10 @@ export default function ShowSubjects({showw}) {
     }
   }, [subjectItem]);
 
-  useEffect(() => {
-    GetSubjectItems(page - 1, pageCount);
-    GetCategoryItem();
-  }, [cmsContext.flagPublic, show]);
+  // useEffect(() => {
+  //   GetSubjectItems(page - 1, pageCount);
+  //   GetCategoryItem();
+  // }, [cmsContext.flagPublic, show]);
 
   useEffect(() => {
     if (!show) {

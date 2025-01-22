@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import './NewSubject.css'
 import { useForm } from 'react-hook-form'
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 
-// import { EditorState, convertToRaw, ContentState, AtomicBlockUtils } from 'draft-js';
-// import { Editor } from 'react-draft-wysiwyg';
-// import draftToHtml from 'draftjs-to-html';
-// import htmlToDraft from 'html-to-draftjs';
 
 import TextEditor from '../../Editor/TextEditor';
 
@@ -24,9 +22,9 @@ import fileUploadHandler from '../../../utils/Functions';
 import ApiPostX from '../../../utils/ApiServicesX/ApiPostX';
 import alertA from '../../../utils/AlertFunc/AlertA';
 import ApiGetX from '../../../utils/ApiServicesX/ApiGetX';
-// import TextEditor from '../../Editor/TextEditorByImg';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-
+import RichTextEditor from '../../IsolaEditor/RichTextEditor';
+import ParagraphsRenderer from '../../IsolaEditor/ParagraphsRenderer';
 
 
 export default function NewSubject({showw}) {
@@ -43,84 +41,22 @@ export default function NewSubject({showw}) {
   const navigate=useNavigate()
   const cmsContext=useContext(CmsContext)
   const headerAuth = `Bearer ${cmsContext.token.token}`;
+  const contentRef = useRef(null);
+    const [flagReset, setFlagReset] = useState(true)
+    const [tabId, setTabId] = useState('')
+    const [paragraphs, setParagraphs] = useState(JSON.parse(localStorage.getItem("paragraphs")) || []);
+// const [isolaLocal,setIsplaLocal]=useState(localStorage.getItem("paragraphs") )
+const [isolaLocal,setIsplaLocal]=useState(JSON.parse(localStorage.getItem("paragraphs")) || [] )
+console.log(paragraphs)
   let dateModife = new Date()
   const { register, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
-    }
+    } 
   });
 
   const handleEditorChange = (value) => {
     setCkValue(value);
 };
-
-
-
-/////////editor StateS==> 
-
-//   const Image = (props) => {
-//     const { src } = props.contentState.getEntity(props.block.getEntityAt(0)).getData();
-//     return <img src={src} alt="" style={{ maxWidth: '100%' }} />;
-//   };
-  
-//   // Block Renderer Function
-//   const blockRendererFn = (contentBlock) => {
-//     if (contentBlock.getType() === 'atomic') {
-//       return {
-//         component: Image,
-//         editable: false,
-//       };
-//     }
-//     return null;
-//   };
-  
-//   // Handle dropped files (drag-and-drop)
-//   const handleDroppedFiles = (selection, files) => {
-//     const file = files[0];
-//     const reader = new FileReader();
-
-//     reader.onload = (e) => {
-//       const src = e.target.result;
-//       const contentState = editorState.getCurrentContent();
-//       const contentStateWithEntity = contentState.createEntity('IMAGE', 'IMMUTABLE', { src });
-//       const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-//       const newEditorState = AtomicBlockUtils.insertAtomicBlock(
-//         editorState,
-//         entityKey,
-//         ' '
-//       );
-//       setEditorState(EditorState.forceSelection(newEditorState, newEditorState.getCurrentContent().getSelectionAfter()));
-//     };
-
-//     reader.readAsDataURL(file);
-//     return 'handled';
-//   };
-
-
-// ///////////////////////////////
-// const html = '<p></p>';
-// const contentBlock = htmlToDraft(html);
-// const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-// const [editorState, setEditorState] = useState(EditorState.createWithContent(contentState));
-
-// const onEditorStateChange = (editorState) => {
-//   setEditorState(editorState);
-//   setCkValue(draftToHtml(convertToRaw(editorState.getCurrentContent())))
-// };
-
-// const uploadImageCallBack = (file) => {
-//   return new Promise((resolve, reject) => {
-//     const reader = new FileReader();
-//     reader.onload = (e) => {
-//       resolve({ data: { link: e.target.result } });
-//     };
-//     reader.readAsDataURL(file);
-//   });
-// };
-
-/////////////////////////////////////end editor States
-
-
-
 
 
  ///////////////////upload img function===>
@@ -172,7 +108,7 @@ const funcA=()=>{
       title: data.title,
       urL_Title: data.url,
       describtion: data.description,
-      body: ckValue,
+      body:flagReset ?ckValue : isolaLocal,
       tag: data.tag,
       extra: data.extra,
       dateShow: value4,
@@ -184,7 +120,7 @@ const funcA=()=>{
       cyCategoryId: data.category
     }
     console.log(obj)
-ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
+// ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
   } 
   ////////////////////////////////
   const categoryIdChild = () => {
@@ -196,9 +132,9 @@ ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
   }
 
   //////////////////////////
-  useEffect(() => {
-    GetCategoryItem()
-  }, [])
+  // useEffect(() => {
+  //   GetCategoryItem()
+  // }, [])
   function handleChange(value){
     setValue4( value && value.toDate())
     // console.log(value.format());   /// convert  to persian format
@@ -206,6 +142,22 @@ ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
   function handleChangeB(value){
     setValue5(value && value.toDate())
   }
+
+  const ffc = (tabName) => {
+    // cmsContext.setFlagResetInput(true)
+    setTabId(tabName)
+    if(tabName==="editor1"){
+  setFlagReset(true)
+}else if(tabName==="editor2"){
+  setFlagReset(false)
+}
+} 
+useEffect(() => {
+  if (contentRef.current) {
+    console.log('Element found:', contentRef.current);
+    // کاری که می‌خواهید انجام دهید
+  }
+}, []);
   return (
     <div className='container'>
       <div className='row'>
@@ -421,56 +373,75 @@ ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
               }
             </span>
      
-<div>
-  {
-    showw==='newSub' && 
-    <TextEditor height={!flagEditor ? '400px' :  '100vh'  } image={true}  value={ckValue} onChange={handleEditorChange}/>
+<>
 
-  }
+{/* {paragraphs.length == 0 &&  */}
+<>
+<p>dadasd</p> 
+<div ref={contentRef} className="content-wrapper">
+        
+        <ParagraphsRenderer
+          paragraphs={paragraphs}
+          activeParagraph={null}
+          activeRow={null}
+          activeElement={null}
+          setActiveParagraph={() => {}}
+          setActiveRow={() => {}}
+          setActiveElement={() => {}}
+          setIsImageSelected={() => {}}
+          setActivePopup={() => {}}
+          handleTextResize={() => {}}
+          setImageSettings={() => {}}
+          setParagraphs={() => {}}
+          isViewMode={true}
+        />
+      </div>
+</>
+      
+      {/* } */}
+
+
+<Tabs
+dir='rtl'
+  defaultActiveKey="subject"
+  id="fill-tab-example"
+  className="mb-2"
+  // fill
+  onSelect={ffc}
+
+>
+  <Tab  
+  eventKey="editor1" title=" ادیتور 1" style={{ background: 'inherit' }}>
+ <div style={{paddingBottom:'30px'}}>
+
+{
+  showw==='newSub' && flagReset &&
+  <TextEditor height={!flagEditor ? '600px' :  '100vh'  }  image={true}  value={ckValue} onChange={handleEditorChange}/>
+
+}
 </div>
+  </Tab>
+
+  <Tab 
+  eventKey="editor2" title=" ادیتور2 " style={{ background: 'inherit' }}>
+   {
+    !flagReset && <div>
+    <RichTextEditor />
+  </div>
+   }
+
+  </Tab>
+
+</Tabs>
+
+</>
+
+
+
  <div>
  {/* <TextEditor value={ckValue} onChange={handleEditorChange} /> */}
 
  </div>
-
-
-
-         {/* <Editor
-        toolbar={{
-          fontFamily: {
-            options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana','Yekan'],
-            className: undefined,
-            component: undefined,
-            dropdownClassName: undefined,
-          },
-          image: {
-            urlEnabled: true,
-            uploadEnabled: true,
-            alignmentEnabled: true, // Allows alignment (left, center, right)
-            uploadCallback: uploadImageCallBack, // Function to handle image upload
-            previewImage: true,
-            inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-            alt: { present: true, mandatory: false },
-            // defaultSize: {
-            //   width: '100%',
-            //   height: '100%',
-            // }
-            }
-        }
-      
-      }
-       
-        editorState={editorState}
-      wrapperClassName="demo-wrapper"
-      editorClassName="demo-editor"
-      onEditorStateChange={onEditorStateChange}
-      handleDroppedFiles={handleDroppedFiles}
-      blockRendererFn={blockRendererFn}
-      /> */}
-
-
-
-
 
 
             </div>
