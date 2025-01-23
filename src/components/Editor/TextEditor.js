@@ -291,7 +291,7 @@ Quill.register(CustomHTMLBlot);
 ///////////////////////////
 
 
-const TextEditor = ({ value, onChange, isDark,height,image }) => {
+const TextEditor = ({ value, onChange, isDark,height,image, }) => {
   const editorRef = useRef(null);
   const formats = [
     'header',
@@ -391,7 +391,8 @@ const TextEditor = ({ value, onChange, isDark,height,image }) => {
   }, []);
   return (
     <>
-      <div className="textEditor-img-div">
+    <div style={{position:'relative'}}>
+          <div className="textEditor-img-div">
         {image ?  <>
          <AddPhotoAlternateIcon className="textEditor-img-icon" />
          {/* <img src="../../../../images/40166.png" alt="" className="textEditor-img-icon"/> */}
@@ -416,7 +417,10 @@ const TextEditor = ({ value, onChange, isDark,height,image }) => {
           className={isDark ? 'quill-dark' : 'quill-light'}
           style={{ height: height, fontFamily: 'Yekan, sans-serif' }}
         />
+
       </div>
+    </div>
+  
     </>
   );
 };

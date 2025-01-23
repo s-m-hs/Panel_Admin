@@ -120,7 +120,7 @@ const funcA=()=>{
       cyCategoryId: data.category
     }
     console.log(obj)
-// ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
+ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
   } 
   ////////////////////////////////
   const categoryIdChild = () => {
@@ -412,7 +412,7 @@ dir='rtl'
 >
   <Tab  
   eventKey="editor1" title=" ادیتور 1" style={{ background: 'inherit' }}>
- <div style={{paddingBottom:'30px'}}>
+ <div  style={{paddingBottom:'30px'}  }>
 
 {
   showw==='newSub' && flagReset &&

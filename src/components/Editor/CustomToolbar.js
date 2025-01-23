@@ -1,5 +1,5 @@
 const CustomToolbar = ({onInsertHTML}) => (
-    <div id="toolbar">
+    <div id="toolbar" >
       {/* فونت‌ها */}
       <select className="ql-font">
         <option value="vazir" selected>Vazir</option>
