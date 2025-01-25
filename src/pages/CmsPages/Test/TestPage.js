@@ -48,7 +48,7 @@ get()
   return (
     <div>
         <div dangerouslySetInnerHTML={{__html:subject.body}}></div>
-        {/* <ImageResizer/> */}
+        <ImageResizer/>
     {/* <TextEditor height={!flagEditor ? '400px' :  '100vh'  } image={true} value={ckValue} onChange={handleEditorChange} /> */}
 
     </div>

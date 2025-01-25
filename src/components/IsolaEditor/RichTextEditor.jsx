@@ -4,6 +4,7 @@ import Toolbar from "./Toolbar";
 import ParagraphsRenderer from "./ParagraphsRenderer";
 import "./RichTextEditor.css";
 import { useNavigate } from "react-router-dom";
+import ImageResizer from "../../utils/ImageResizer";
 
 const RichTextEditor = () => {
   const navigate = useNavigate();
@@ -755,7 +756,6 @@ useEffect(() => {
     localStorage.setItem("paragraphs", JSON.stringify(paragraphs));
     alert("داده‌ها با موفقیت ذخیره شدند!");
   };
-
   const viewData = () => {
     navigate("/home");
   };
@@ -786,6 +786,7 @@ useEffect(() => {
 
   return (
     <div className="rich-text-editor">
+          <ImageResizer/>
       <Toolbar
         addNewParagraph={addNewParagraph}
         addNewRow={addNewRow}

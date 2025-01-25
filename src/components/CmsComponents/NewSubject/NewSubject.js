@@ -25,6 +25,7 @@ import ApiGetX from '../../../utils/ApiServicesX/ApiGetX';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import RichTextEditor from '../../IsolaEditor/RichTextEditor';
 import ParagraphsRenderer from '../../IsolaEditor/ParagraphsRenderer';
+import ImageResizer from '../../../utils/ImageResizer';
 
 
 export default function NewSubject({showw}) {
@@ -154,7 +155,7 @@ ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
 } 
 useEffect(() => {
   if (contentRef.current) {
-    console.log('Element found:', contentRef.current);
+    console.log('Element found:', contentRef.current); 
     // کاری که می‌خواهید انجام دهید
   }
 }, []);
@@ -426,6 +427,7 @@ dir='rtl'
   eventKey="editor2" title=" ادیتور2 " style={{ background: 'inherit' }}>
    {
     !flagReset && <div>
+          {/* <ImageResizer/> */}
     <RichTextEditor />
   </div>
    }
