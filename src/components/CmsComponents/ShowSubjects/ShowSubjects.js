@@ -29,12 +29,13 @@ import ApiPutX from "../../../utils/ApiServicesX/ApiPutX";
 import ApiDeleteX from "../../../utils/ApiServicesX/ApiDeleteX";
 import alertA from "../../../utils/AlertFunc/AlertA";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import RichTextEditor from "../../IsolaEditor/RichTextEditor";
 
 export default function ShowSubjects({showw}) {
   const [subjectItem, setSubjectItem] = useState([]);
   const [subjectItemitemList, setSubjectItemitemList] = useState([]);
   const subjectItemRevers = subjectItemitemList?.slice().reverse();
-
+console.log(subjectItemitemList)
   // const subjectReverse = subjectItem.slice().reverse()
   const [show, setShow] = useState(false);
   const [ckValue, setCkValue] = useState("");
@@ -1066,10 +1067,27 @@ export default function ShowSubjects({showw}) {
                         <i class="fa-solid fa-angles-up"></i>
                       )}
                     </span>
+
 {showw=='showSub'&& 
                     <TextEditor height={!flagEditor ? '400px' :  '100vh'  } image={true} value={ckValue} onChange={handleEditorChange} />
 
 }
+
+
+<>
+<div className="editor-buttons">
+        <button className="save-button" >
+          ذخیره
+        </button>
+        {/* <button className="view-button" onClick={()=>{
+          setShow(true)
+        }}>
+          مشاهده
+        </button> */}
+      </div>
+    <RichTextEditor />
+  
+</>
                     {/* <Editor
                      toolbar={{
                       fontFamily: {

@@ -26,7 +26,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import RichTextEditor from '../../IsolaEditor/RichTextEditor';
 import ParagraphsRenderer from '../../IsolaEditor/ParagraphsRenderer';
 import ImageResizer from '../../../utils/ImageResizer';
-
+import Modal from 'react-bootstrap/Modal';
 
 export default function NewSubject({showw}) {
   const [ckValue, setCkValue] = useState('')
@@ -39,16 +39,18 @@ export default function NewSubject({showw}) {
   const [imgUrl, setImgUrl] = useState('')
   const [file2, setFile2] = useState({})
   const [imgUrl2, setImgUrl2] = useState('')
+    const [flagReset, setFlagReset] = useState(true)
+    const [tabId, setTabId] = useState('editor1')
+    const [isolaLocal,setIsplaLocal]=useState('')
+    const [paragraphs, setParagraphs] = useState(JSON.parse(localStorage.getItem("paragraphs")) || []);
+    const [editorState,setEditorState]=useState(0)
+
   const navigate=useNavigate()
   const cmsContext=useContext(CmsContext)
   const headerAuth = `Bearer ${cmsContext.token.token}`;
   const contentRef = useRef(null);
-    const [flagReset, setFlagReset] = useState(true)
-    const [tabId, setTabId] = useState('')
-    const [paragraphs, setParagraphs] = useState(JSON.parse(localStorage.getItem("paragraphs")) || []);
+
 // const [isolaLocal,setIsplaLocal]=useState(localStorage.getItem("paragraphs") )
-const [isolaLocal,setIsplaLocal]=useState(JSON.parse(localStorage.getItem("paragraphs")) || [] )
-console.log(paragraphs)
   let dateModife = new Date()
   const { register, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
@@ -109,7 +111,9 @@ const funcA=()=>{
       title: data.title,
       urL_Title: data.url,
       describtion: data.description,
-      body:flagReset ?ckValue : isolaLocal,
+      editorState:editorState,
+      bodyString:paragraphs ? localStorage.getItem("paragraphs") : '' ,
+      body:flagReset ?ckValue : isolaLocal.outerHTML,
       tag: data.tag,
       extra: data.extra,
       dateShow: value4,
@@ -117,11 +121,12 @@ const funcA=()=>{
       isAuthenticate: true,
       bigImg: file2.name ? `${apiUrl}/${imgUrl2}` : imgUrl2,
       smallImg: file.name ? `${apiUrl}/${imgUrl}` : imgUrl,
-      orderValue: 0,
+      orderValue: 0, 
       cyCategoryId: data.category
     }
     console.log(obj)
 ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
+localStorage.removeItem('paragraphs')
   } 
   ////////////////////////////////
   const categoryIdChild = () => {
@@ -149,18 +154,44 @@ ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
     setTabId(tabName)
     if(tabName==="editor1"){
   setFlagReset(true)
+  setEditorState(0)
 }else if(tabName==="editor2"){
   setFlagReset(false)
+  setEditorState(2)
 }
 } 
+// useEffect(()=>{
+//   setParagraphs(JSON.parse(localStorage.getItem("paragraphs")))
+// },[])
+
+
+
 useEffect(() => {
   if (contentRef.current) {
-    console.log('Element found:', contentRef.current); 
+    console.log('Element found:', contentRef.current);  
+    setIsplaLocal(contentRef.current) 
     // کاری که می‌خواهید انجام دهید
   }
-}, []);
+}, [paragraphs]);
+
+
+const clickkk=()=>{
+  setParagraphs(JSON.parse(localStorage.getItem("paragraphs")))
+  setIsplaLocal(contentRef.current) 
+  console.log(typeof localStorage.getItem("paragraphs"))
+  console.log(JSON.parse(localStorage.getItem("paragraphs")))
+ 
+
+}
+// useEffect(() => {
+//   if (contentRef.current) {
+//     setIsplaLocal(contentRef.current) 
+
+//      // اینجا مقدار درست خواهد بود
+//   }
+// }, [flagIsolaEditor])
   return (
-    <div className='container'>
+    <div className='container'>  
       <div className='row'>
         <form   className={!flagEditor ? 'newsubject-form ' :'newsubject-form-hidden'}     onSubmit={handleSubmit(handleSubmitEdit)} >
 
@@ -373,13 +404,15 @@ useEffect(() => {
 
               }
             </span>
-     
-<>
+      
+<> 
 
 {/* {paragraphs.length == 0 &&  */}
 <>
-<p>dadasd</p> 
-<div ref={contentRef} className="content-wrapper">
+{/* <button onClick={()=>{
+clickkk()
+}}> ssss</button> */}
+        {/* <div ref={contentRef} className="content-wrapper" style={{display:'none'}} >
         
         <ParagraphsRenderer
           paragraphs={paragraphs}
@@ -396,7 +429,7 @@ useEffect(() => {
           setParagraphs={() => {}}
           isViewMode={true}
         />
-      </div>
+      </div> */}
 </>
       
       {/* } */}
@@ -411,23 +444,40 @@ dir='rtl'
   onSelect={ffc}
 
 >
+
+
+
+
   <Tab  
   eventKey="editor1" title=" ادیتور 1" style={{ background: 'inherit' }}>
  <div  style={{paddingBottom:'30px'}  }>
 
-{
-  showw==='newSub' && flagReset &&
+ {showw=='newSub'&& 
   <TextEditor height={!flagEditor ? '600px' :  '100vh'  }  image={true}  value={ckValue} onChange={handleEditorChange}/>
+ }
+ 
 
-}
 </div>
   </Tab>
+
+
+
 
   <Tab 
   eventKey="editor2" title=" ادیتور2 " style={{ background: 'inherit' }}>
    {
     !flagReset && <div>
           {/* <ImageResizer/> */}
+          <div className="editor-buttons">
+        <button className="save-button" onClick={()=>clickkk()}>
+          ذخیره
+        </button>
+        {/* <button className="view-button" onClick={()=>{
+          setShow(true)
+        }}>
+          مشاهده
+        </button> */}
+      </div>
     <RichTextEditor />
   </div>
    }
@@ -450,6 +500,36 @@ dir='rtl'
           </div>
         </div>
       </div>
+      <>
+      {tabId==='editor2' && <>
+      
+          <hr/>
+          <h3 className='boxSh' style={{fontWeight:'600', width:'300px', margin:'0 auto', textAlign:'center'}}>پیش نمایش ادیتور</h3>
+      <div className='row ' style={{height:'100vh',border:"1px solid", width:'90%', margin:'0 auto' }}>
+      <div  className="content-wrapper" ref={contentRef}  >
+        
+        <ParagraphsRenderer
+          paragraphs={paragraphs}
+          activeParagraph={null}
+          activeRow={null}
+          activeElement={null}
+          setActiveParagraph={() => {}}
+          setActiveRow={() => {}}
+          setActiveElement={() => {}}
+          setIsImageSelected={() => {}}
+          setActivePopup={() => {}}
+          handleTextResize={() => {}}
+          setImageSettings={() => {}}
+          setParagraphs={() => {}}
+          isViewMode={true}
+        />
+      </div>
+         </div>
+
+      </>}
+    
+        </>
+
     </div>
   )
 }

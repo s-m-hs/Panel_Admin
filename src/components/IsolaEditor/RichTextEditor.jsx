@@ -754,6 +754,8 @@ useEffect(() => {
 
   const saveData = () => {
     localStorage.setItem("paragraphs", JSON.stringify(paragraphs));
+    console.log(paragraphs)
+    
     alert("داده‌ها با موفقیت ذخیره شدند!");
   };
   const viewData = () => {
@@ -820,14 +822,14 @@ useEffect(() => {
 
       />
 
-      <div className="editor-buttons">
+      {/* <div className="editor-buttons">
         <button className="save-button" onClick={saveData}>
           ذخیره
         </button>
         <button className="view-button" onClick={viewData}>
           مشاهده
         </button>
-      </div>
+      </div> */}
 
       <ParagraphsRenderer
         paragraphs={paragraphs}
