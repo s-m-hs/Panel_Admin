@@ -5,13 +5,14 @@ import ParagraphsRenderer from "./ParagraphsRenderer";
 import "./RichTextEditor.css";
 import { useNavigate } from "react-router-dom";
 import ImageResizer from "../../utils/ImageResizer";
+import fileUploadHandler from "../../utils/Functions";
+import apiUrl from "../../utils/ApiConfig";
 
-const RichTextEditor = () => {
+const RichTextEditor = ({bodyString}) => {
   const navigate = useNavigate();
   const [paragraphs, setParagraphs] = useState(
     JSON.parse(localStorage.getItem("paragraphs")) || []
   );
-
   const [activeParagraph, setActiveParagraph] = useState(0);
   const [activeRow, setActiveRow] = useState(null);
   const [activeElement, setActiveElement] = useState(null);
@@ -36,7 +37,17 @@ const RichTextEditor = () => {
   // ذخیره‌ی داده‌ها در localStorage هر بار که paragraphs تغییر می‌کند
   useEffect(() => {
     localStorage.setItem("paragraphs", JSON.stringify(paragraphs));
+   
   }, [paragraphs]);
+
+  useEffect(()=>{
+        setParagraphs([])  //<==to empty state to remove from local
+    if(bodyString){
+      let paragraf=JSON.parse(bodyString)
+      localStorage.setItem('paragraphs',JSON.stringify(paragraf))
+      setParagraphs( JSON.parse(localStorage.getItem("paragraphs")))
+    }
+  },[bodyString])
 
   const alignSelfValue = (alignment) => {
     switch (alignment) {
@@ -785,10 +796,29 @@ useEffect(() => {
       )
     );
   };
+    const [file2, setFile2] = useState({})
+    const [imgUrl2, setImgUrl2] = useState('')
+  
+    const fileChange3 = (e) => {
+      setFile2(e.target.files[0])
+    }
+    const fileChange4 = (e) => {
+      setFile2('')
+      setImgUrl2(e.target.value)
+    }
+  useEffect(() => {
+    if (file2?.name) {
+      fileUploadHandler(file2,setImgUrl2)
+    }
 
+  }, [file2])
+ 
+  console.log(` ${apiUrl}/${imgUrl2}`)
+  console.log(file2)
+  console.log(fileInputRef.current)
   return (
     <div className="rich-text-editor">
-          <ImageResizer/>
+          {/* <ImageResizer/> */}
       <Toolbar
         addNewParagraph={addNewParagraph}
         addNewRow={addNewRow}
@@ -847,7 +877,9 @@ useEffect(() => {
       />
 
       <input
-        type="file"
+        type="file" 
+        // onChange={fileChange3}
+        // value={imgUrl2? ` ${apiUrl}/${imgUrl2}`:''}
         ref={fileInputRef}
         style={{ display: "none" }}
         accept="image/*"

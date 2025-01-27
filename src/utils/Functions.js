@@ -13,7 +13,7 @@ import apiUrl from "./ApiConfig";
         method: 'POST',
         body: formData
       }).then(res => {
-        // console.log(res)
+        console.log(res)
         if(res.ok){
       return res.json().then(
         (result) => {

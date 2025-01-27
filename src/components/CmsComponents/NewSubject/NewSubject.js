@@ -125,7 +125,7 @@ const funcA=()=>{
       cyCategoryId: data.category
     }
     console.log(obj)
-ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
+// ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
 localStorage.removeItem('paragraphs')
   } 
   ////////////////////////////////
@@ -154,7 +154,7 @@ localStorage.removeItem('paragraphs')
     setTabId(tabName)
     if(tabName==="editor1"){
   setFlagReset(true)
-  setEditorState(0)
+  setEditorState('')
 }else if(tabName==="editor2"){
   setFlagReset(false)
   setEditorState(2)
@@ -168,7 +168,6 @@ localStorage.removeItem('paragraphs')
 
 useEffect(() => {
   if (contentRef.current) {
-    console.log('Element found:', contentRef.current);  
     setIsplaLocal(contentRef.current) 
     // کاری که می‌خواهید انجام دهید
   }
@@ -178,8 +177,8 @@ useEffect(() => {
 const clickkk=()=>{
   setParagraphs(JSON.parse(localStorage.getItem("paragraphs")))
   setIsplaLocal(contentRef.current) 
-  console.log(typeof localStorage.getItem("paragraphs"))
-  console.log(JSON.parse(localStorage.getItem("paragraphs")))
+  // console.log(typeof localStorage.getItem("paragraphs"))
+  // console.log(JSON.parse(localStorage.getItem("paragraphs")))
  
 
 }
@@ -288,6 +287,9 @@ const clickkk=()=>{
                   onChange={fileChange2}
                   value={imgUrl}
                 />
+
+
+                
                 <label>عکس کوچک </label>
 
                 <div className='product-uploade-maindiv centerr'>

@@ -30,19 +30,28 @@ import ApiDeleteX from "../../../utils/ApiServicesX/ApiDeleteX";
 import alertA from "../../../utils/AlertFunc/AlertA";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import RichTextEditor from "../../IsolaEditor/RichTextEditor";
+import ParagraphsRenderer from "../../IsolaEditor/ParagraphsRenderer";
 
-export default function ShowSubjects({showw}) {
+export default function ShowSubjects({ showw }) {
+  let { xtSearchA, xtSearchB, xtSearchC, xtSearchD, setResetSearchbox } =
+    useContext(CmsContext);
+    const navigate = useNavigate();
+    const homeContext = useContext(HomeContext);
+    const cmsContext = useContext(CmsContext);
+    const headerAuth = `Bearer ${cmsContext.token.token}`;
+
   const [subjectItem, setSubjectItem] = useState([]);
   const [subjectItemitemList, setSubjectItemitemList] = useState([]);
   const subjectItemRevers = subjectItemitemList?.slice().reverse();
-console.log(subjectItemitemList)
   // const subjectReverse = subjectItem.slice().reverse()
   const [show, setShow] = useState(false);
+  const [showB, setShowB] = useState(false);
   const [ckValue, setCkValue] = useState("");
   const [categoryItem, setCategoriItem] = useState([]);
   const [value4, setValue4] = useState();
   const [value5, setValue5] = useState();
   const [fullscreen, setFullscreen] = useState(true);
+  const [fullscreenB, setFullscreenB] = useState(true);
   const [putId, setPutId] = useState("");
   const [flagDate1, setFlagDate1] = useState(false);
   const [flagDate2, setFlagDate2] = useState(false);
@@ -60,9 +69,15 @@ console.log(subjectItemitemList)
   const [searchState, setSearchState] = useState([]);
   const [searchObj, setSearchObj] = useState({});
   const [flagSeveralCategory, setFlagSeveralCategory] = useState(false);
-  const [idMagazin,setIdMagazin]=useState([])
-  let { xtSearchA, xtSearchB, xtSearchC, xtSearchD, setResetSearchbox } =
-    useContext(CmsContext);
+  const [idMagazin, setIdMagazin] = useState([]);
+
+  ///isola state===>
+  const [editorState, setEditorState] = useState("");
+  const [bodyString, setBodyString] = useState("");
+  const contentRef = useRef(null);
+  const [paragraphs, setParagraphs] = useState("");
+  const [isolaLocal, setIsplaLocal] = useState("");
+  /////////////////
   const [selectedOrder, setSelectedOrder] = useState({
     name: "جدید ترین",
     code: "NY",
@@ -80,15 +95,6 @@ console.log(subjectItemitemList)
     { id: 690, text: "PCB" },
     { id: 685, text: "مقالات" },
   ];
-  const navigate = useNavigate();
-  const homeContext = useContext(HomeContext);
-  const cmsContext = useContext(CmsContext);
-  const headerAuth = `Bearer ${cmsContext.token.token}`;
-
-  let dateModife = new Date();
-  const { register, handleSubmit, setValue, reset } = useFormA({
-    defaultValues: {},
-  });
   const {
     register: registerFormB,
     handleSubmit: handleSubmitFormB,
@@ -96,6 +102,11 @@ console.log(subjectItemitemList)
     reset: resetB,
     formState: { errorsB },
   } = useFormB({
+    defaultValues: {},
+  });
+
+  let dateModife = new Date();
+  const { register, handleSubmit, setValue, reset } = useFormA({
     defaultValues: {},
   });
   ////////////////////////////////
@@ -145,15 +156,7 @@ console.log(subjectItemitemList)
       fileUploadHandler(file2, setImgUrl2);
     }
   }, [, file2]);
-  /////////////////////////////////
-  /////////////////////////////
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: "btn btn-success",
-      cancelButton: "btn btn-danger",
-    },
-    buttonsStyling: false,
-  });
+
   ////////////////////////////////about setdate ===>
   function handleChange(value) {
     setValue4(value && value.toDate());
@@ -188,27 +191,26 @@ console.log(subjectItemitemList)
           return res.json().then((result) => {
             // setValue("updat", {
             //   category2:result})
-              setIdMagazin(result)
-              setValue("updat", {
-                url: data[12],
-                title: data[1],
-                subTitle: data[9],
-                description: data[5],
-                tag: data[11],
-                extra: data[6],
-                bigImg: data[2],
-                smImg: data[10],
-                orderValue: data[8],
-                radio: data[7],
-                category: data[4],
-                category2:result 
-              });
+            setIdMagazin(result);
+            setValue("updat", {
+              url: data[12],
+              title: data[1],
+              subTitle: data[9],
+              description: data[5],
+              tag: data[11],
+              extra: data[6],
+              bigImg: data[2],
+              smImg: data[10],
+              orderValue: data[8],
+              radio: data[7],
+              category: data[4],
+              category2: result,
+            });
           });
         }
       });
     }
     myApp();
-
 
     setShow(true);
     setPutId(data[0]);
@@ -217,20 +219,8 @@ console.log(subjectItemitemList)
     setImgUrl(data[10]);
     setImgUrl2(data[2]);
     setCkValue(data[3]);
-    // setValue("updat", {
-    //   url: data[12],
-    //   title: data[1],
-    //   subTitle: data[9],
-    //   description: data[5],
-    //   tag: data[11],
-    //   extra: data[6],
-    //   bigImg: data[2],
-    //   smImg: data[10],
-    //   orderValue: data[8],
-    //   radio: data[7],
-    //   category: data[4],
-    //   category2:idMagazin ? idMagazin :''
-    // });
+    setEditorState(data[15]);
+    setBodyString(data[16]);
   };
 
   const resetUpdatFieldB = () => {
@@ -284,32 +274,6 @@ console.log(subjectItemitemList)
     getSubjectSearch(obj);
   };
 
-  // const getIdForMagazine = (id) => {
-  //   async function myApp() {
-  //     const res = await fetch(
-  //       `${apiUrl}/api/CySubjects/getCategoryIdsForSubject?subjectId=${id}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${cmsContext.token.token}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     ).then((res) => {
-  //       console.log(res);
-  //       if (res.ok) {
-  //         return res.json().then((result) => {
-  //           // setValue("updat", {
-  //           //   category2:result})
-  //             setIdMagazin(result)
-  //             // setmagazin(result)
-  //           console.log(result);
-  //         });
-  //       }
-  //     });
-  //   }
-  //   myApp();
-  // };
   ///////////////////////////
   const funcA = () => {
     alertA("ویرایش با موفقیت انجام شد");
@@ -328,6 +292,7 @@ console.log(subjectItemitemList)
     setTableState(false);
     resetB(setValueB(""));
     setResetSearchbox(true);
+    localStorage.removeItem("paragraphs");
   };
 
   const handleSubmitEdit = (data) => {
@@ -337,7 +302,11 @@ console.log(subjectItemitemList)
       title: data.updat.title,
       urL_Title: data.updat.url,
       describtion: data.updat.description,
-      body: ckValue,
+      ///state of isola editor 
+      editorState: bodyString ? 2 : "",
+      bodyString: bodyString ? localStorage.getItem("paragraphs") : "",
+      /////////////////
+      body: bodyString && isolaLocal ? isolaLocal.outerHTML : ckValue,
       tag: data.updat.tag,
       extra: data.updat.extra,
       dateShow: value4,
@@ -349,8 +318,8 @@ console.log(subjectItemitemList)
       cyCategoryId: Number(data.updat.category),
       categoryIds: data.updat.category2 ? data.updat.category2 : null,
     };
-    // console.log(obj)
-    ApiPutX("/api/CySubjects", headerAuth, putId, obj, funcA);
+    console.log(obj) 
+    // ApiPutX("/api/CySubjects", headerAuth, putId, obj, funcA);
   };
   ////////////////////////////
   const funcB = () => {
@@ -443,6 +412,14 @@ console.log(subjectItemitemList)
       setFlagSeveralCategory(false);
     }
   }, [show]);
+
+  /////isola useeffect
+  useEffect(() => {
+    setParagraphs(JSON.parse(localStorage.getItem("paragraphs")));
+    setIsplaLocal(contentRef.current);
+
+  }, [showB]);
+//////////////////////////////
 
   useEffect(() => {
     return () => setResetSearchbox(true);
@@ -589,6 +566,7 @@ console.log(subjectItemitemList)
                               <button
                                 className="btn btn-info showsubject-editbut"
                                 onClick={() => {
+                                  console.log(item);
                                   showModalHandler(
                                     item.id,
                                     item.title,
@@ -604,12 +582,13 @@ console.log(subjectItemitemList)
                                     item.tag,
                                     item.urL_Title,
                                     item.dateExp,
-                                    item.dateShow
+                                    item.dateShow,
+                                    item.editorState,
+                                    item.bodyString
                                     // console.log(item)
                                   );
-                                  // console.log(putId) 
+                                  // console.log(putId)
                                   // getIdForMagazine(item.id);
-
                                 }}
                               >
                                 ویرایش
@@ -652,10 +631,9 @@ console.log(subjectItemitemList)
                               <button
                                 className="btn btn-info showsubject-editbut"
                                 onClick={() => {
-                                 
                                   showModalHandler(
                                     item.id,
-                                    item.title, 
+                                    item.title,
                                     item.bigImg,
                                     item.body,
                                     item.cyCategoryId,
@@ -668,7 +646,9 @@ console.log(subjectItemitemList)
                                     item.tag,
                                     item.urL_Title,
                                     item.dateExp,
-                                    item.dateShow
+                                    item.dateShow,
+                                    item.editorState,
+                                    item.bodyString
                                   );
                                   // getIdForMagazine(item.id);
                                 }}
@@ -741,6 +721,11 @@ console.log(subjectItemitemList)
             flagDate2 && setValue5("");
           }
           setShow(false);
+
+          //to empty state to remove from local
+          setBodyString("");
+          localStorage.removeItem("paragraphs");
+          //
         }}
         dialogClassName="modal-90w"
         aria-labelledby="example-custom-modal-styling-title"
@@ -1045,10 +1030,13 @@ console.log(subjectItemitemList)
                               </div>
                             </>
                           ))}
-<ul className="showSubject-magazine-ul">
-  {severaCateArray.filter(item => idMagazin.includes(item.id)).map(ite=>(<li>{ite.text}</li>))}
-</ul>
-                          
+                        <ul className="showSubject-magazine-ul">
+                          {severaCateArray
+                            .filter((item) => idMagazin.includes(item.id))
+                            .map((ite) => (
+                              <li>{ite.text}</li>
+                            ))}
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -1068,43 +1056,34 @@ console.log(subjectItemitemList)
                       )}
                     </span>
 
-{showw=='showSub'&& 
-                    <TextEditor height={!flagEditor ? '400px' :  '100vh'  } image={true} value={ckValue} onChange={handleEditorChange} />
+                    {/* editor html===> */}
 
-}
+                    {!editorState && showw == "showSub" && (
+                      <TextEditor
+                        height={!flagEditor ? "400px" : "100vh"}
+                        image={true}
+                        value={ckValue}
+                        onChange={handleEditorChange}
+                      />
+                    )}
 
-
-<>
-<div className="editor-buttons">
-        <button className="save-button" >
-          ذخیره
-        </button>
-        {/* <button className="view-button" onClick={()=>{
-          setShow(true)
-        }}>
-          مشاهده
-        </button> */}
-      </div>
-    <RichTextEditor />
-  
-</>
-                    {/* <Editor
-                     toolbar={{
-                      fontFamily: {
-                        options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana','Yekan'],
-                        className: undefined,
-                        component: undefined,
-                        dropdownClassName: undefined,
-                      },
-                    }}
-                   
-                    editorState={editorState}
-                  wrapperClassName="demo-wrapper"
-                  editorClassName="demo-editor"
-                  onEditorStateChange={onEditorStateChange}
-                  handleDroppedFiles={handleDroppedFiles}
-                  blockRendererFn={blockRendererFn}
-                    /> */}
+                    {editorState == 2 && (
+                      <>
+                        <div className="editor-buttons">
+                          {/* <button className="save-button">ذخیره</button> */}
+                          <button
+                            className="view-button"
+                            onClick={() => {
+                              setShowB(true);
+                            }}
+                          >
+                            ذخیره
+                          </button>
+                        </div>
+                        <RichTextEditor bodyString={bodyString} />
+                      </>
+                    )}
+                    {/*  */}
                   </div>
                 </div>
               </div>
@@ -1112,6 +1091,42 @@ console.log(subjectItemitemList)
           </div>
         </Modal.Body>
       </Modal>
+
+      <>
+        {/* editor html modal===> */}
+
+        <Modal
+          fullscreen={fullscreenB}
+          show={showB}
+          dialogClassName="modal-90w"
+          aria-labelledby="example-custom-modal-styling-title"
+          onHide={() => setShowB(false)}
+        >
+          <Modal.Header closeButton></Modal.Header>
+          <Modal.Body>
+            {/* <div dangerouslySetInnerHTML={{__html:ckValue}}></div> */}
+
+            <div className="content-wrapper" ref={contentRef}>
+              <ParagraphsRenderer
+                paragraphs={paragraphs}
+                activeParagraph={null}
+                activeRow={null}
+                activeElement={null}
+                setActiveParagraph={() => {}}
+                setActiveRow={() => {}}
+                setActiveElement={() => {}}
+                setIsImageSelected={() => {}}
+                setActivePopup={() => {}}
+                handleTextResize={() => {}}
+                setImageSettings={() => {}}
+                setParagraphs={() => {}}
+                isViewMode={true}
+              />
+            </div>
+          </Modal.Body>
+        </Modal>
+      </>
+      {/*  */}
     </div>
   );
 }

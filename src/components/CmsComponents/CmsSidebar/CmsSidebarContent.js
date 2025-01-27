@@ -89,13 +89,14 @@ export default function CmsSidebarContent() {
                     <i class="fa-solid fa-store fa-lg" style={{marginLeft:'5px'}}></i>
                     <span>محاسبه گر سیستم </span> </NavLink>
 
-                    <NavLink className='cmssidebar-div' to={'testpage'}>
-                    <i class="fa-solid fa-store fa-lg" style={{marginLeft:'5px'}}></i>
-                    <span>TEST-PAGE </span> </NavLink>
+                
 
   </>
 }
                   
+<NavLink className='cmssidebar-div' to={'testpage'}>
+                    <i class="fa-solid fa-store fa-lg" style={{marginLeft:'5px'}}></i>
+                    <span>TEST-PAGE </span> </NavLink>
 
                 <hr />
                 <h6 className='cmssidebar-h6'>Notifications</h6>
