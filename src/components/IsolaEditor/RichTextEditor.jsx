@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import ImageResizer from "../../utils/ImageResizer";
 import fileUploadHandler from "../../utils/Functions";
 import apiUrl from "../../utils/ApiConfig";
+import ChangeUplode from "../../utils/ChangeUplode";
 
 const RichTextEditor = ({bodyString}) => {
   const navigate = useNavigate();
@@ -193,68 +194,70 @@ const RichTextEditor = ({bodyString}) => {
     }
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const newImage = {
-          type: "image",
-          src: e.target.result,
-          style: {
-            width: imageSettings.width,
-            height: imageSettings.height,
-            borderRadius: imageSettings.borderRadius,
-            margin: "0px",
-            order: 2,
-          },
-        };
+  // const handleImageUpload = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const newImage = {
+  //         type: "image",
+  //         src: e.target.result,
+  //         style: {
+  //           width: imageSettings.width,
+  //           height: imageSettings.height,
+  //           borderRadius: imageSettings.borderRadius,
+  //           margin: "0px",
+  //           order: 2,
+  //         },
+  //       };
 
-        if (activeRow !== null) {
-          // افزودن تصویر در همان ردیف انتخاب شده
-          setParagraphs((prev) =>
-            prev.map((para, i) =>
-              i === activeParagraph
-                ? {
-                    ...para,
-                    elements: para.elements.map((el, idx) =>
-                      idx === activeRow
-                        ? {
-                            ...el,
-                            elements: [...el.elements, newImage],
-                            style: {
-                              ...el.style,
-                            },
-                          }
-                        : el
-                    ),
-                  }
-                : para
-            )
-          );
-          setActiveElement(
-            paragraphs[activeParagraph]?.elements[activeRow]?.elements.length
-          );
-        } else {
-          // اگر ردیف انتخاب نشده باشد، تصویر مستقیماً به پاراگراف اضافه می‌شود
-          setParagraphs((prev) =>
-            prev.map((para, i) =>
-              i === activeParagraph
-                ? {
-                    ...para,
-                    elements: [...para.elements, newImage],
-                  }
-                : para
-            )
-          );
-          setActiveElement(paragraphs[activeParagraph]?.elements.length);
-        }
-        setIsImageSelected(true);
-        setActivePopup(null);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  //       if (activeRow !== null) {
+  //         // افزودن تصویر در همان ردیف انتخاب شده
+  //         setParagraphs((prev) =>
+  //           prev.map((para, i) =>
+  //             i === activeParagraph
+  //               ? {
+  //                   ...para,
+  //                   elements: para.elements.map((el, idx) =>
+  //                     idx === activeRow
+  //                       ? {
+  //                           ...el,
+  //                           elements: [...el.elements, newImage],
+  //                           style: {
+  //                             ...el.style,
+  //                           },
+  //                         }
+  //                       : el
+  //                   ),
+  //                 }
+  //               : para
+  //           )
+  //         );
+  //         setActiveElement(
+  //           paragraphs[activeParagraph]?.elements[activeRow]?.elements.length
+  //         );
+  //       } else {
+  //         // اگر ردیف انتخاب نشده باشد، تصویر مستقیماً به پاراگراف اضافه می‌شود
+  //         setParagraphs((prev) =>
+  //           prev.map((para, i) =>
+  //             i === activeParagraph
+  //               ? {
+  //                   ...para,
+  //                   elements: [...para.elements, newImage],
+  //                 }
+  //               : para
+  //           )
+  //         );
+  //         setActiveElement(paragraphs[activeParagraph]?.elements.length);
+  //       }
+  //       setIsImageSelected(true);
+  //       setActivePopup(null);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  
+  
 
   const deleteActiveElement = () => {
     if (activeElement === null) return;
@@ -809,10 +812,80 @@ useEffect(() => {
   useEffect(() => {
     if (file2?.name) {
       fileUploadHandler(file2,setImgUrl2)
+      handleImageUpload()
+
     }
+    // handleImageUpload()
 
   }, [file2])
- 
+  const handleImageUpload = () => {
+    // if (file) {
+      // فراخوانی ChangeUpload برای آپلود فایل
+      // ChangeUplode(
+      //   file,
+   
+        // () => {
+          const newImage = {
+            
+            type: "image",
+            src:`${apiUrl}/${imgUrl2}`,
+            // src: `${apiUrl}/api/CyFiles/download/${uploadedFileId}`, // لینک تصویر آپلود شده
+            style: {
+              width: imageSettings.width,
+              height: imageSettings.height,
+              borderRadius: imageSettings.borderRadius,
+              margin: "0px",
+              order: 2,
+            },
+          };
+          console.log(newImage)
+  
+          if (activeRow !== null) {
+            // افزودن تصویر در همان ردیف انتخاب شده
+            setParagraphs((prev) =>
+              prev.map((para, i) =>
+                i === activeParagraph
+                  ? {
+                      ...para,
+                      elements: para.elements.map((el, idx) =>
+                        idx === activeRow
+                          ? {
+                              ...el,
+                              elements: [...el.elements, newImage],
+                              style: {
+                                ...el.style,
+                              },
+                            }
+                          : el
+                      ),
+                    }
+                  : para
+              )
+            );
+            setActiveElement(
+              paragraphs[activeParagraph]?.elements[activeRow]?.elements.length
+            );
+          } else {
+            // اگر ردیف انتخاب نشده باشد، تصویر مستقیماً به پاراگراف اضافه می‌شود
+            setParagraphs((prev) =>
+              prev.map((para, i) =>
+                i === activeParagraph
+                  ? {
+                      ...para,
+                      elements: [...para.elements, newImage],
+                    }
+                  : para
+              )
+            );
+            setActiveElement(paragraphs[activeParagraph]?.elements.length);
+          }
+          setIsImageSelected(true);
+          setActivePopup(null);
+        // }
+      // );
+    // }
+  };
+  
   console.log(` ${apiUrl}/${imgUrl2}`)
   console.log(file2)
   console.log(fileInputRef.current)
@@ -876,14 +949,21 @@ useEffect(() => {
         setParagraphs={setParagraphs}
       />
 
+{/* <input
+  type="file"
+  ref={fileInputRef}
+  style={{ display: "none" }}
+  accept="image/*"
+  onChange={handleImageUpload}
+/>; */}
       <input
         type="file" 
-        // onChange={fileChange3}
+        onChange={fileChange3}
         // value={imgUrl2? ` ${apiUrl}/${imgUrl2}`:''}
         ref={fileInputRef}
         style={{ display: "none" }}
         accept="image/*"
-        onChange={handleImageUpload}
+        // onChange={handleImageUpload}
       />
     </div>
   );
