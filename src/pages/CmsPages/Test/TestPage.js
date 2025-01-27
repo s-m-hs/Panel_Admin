@@ -18,7 +18,7 @@ const cmscontext=useContext(CmsContext)
     
 const get=()=>{
     async function myApp(){
-        const res=await fetch (`${apiUrl}/api/CySubjects/1091`,{
+        const res=await fetch (`${apiUrl}/api/CySubjects/28`,{
             method:'GET',
             headers:{
                 Authorization:`Bearer ${cmscontext.token.token}`,
@@ -35,7 +35,7 @@ const get=()=>{
     }
     myApp()
 }
-console.log(subject.body)
+
 useEffect(()=>{
 get()
 },[])
