@@ -1,12 +1,15 @@
-// components/ImageResizer.js
-
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 import { useDropzone } from 'react-dropzone';
 import ChangeUplode from './ChangeUplode'; // Import the ChangeUplode function
+import { CmsContext, EdiContext } from '../context/CmsContext';
+import ChangeUplodeB from './ChangeUplodeB';
+import apiUrl from './ApiConfig';
 
 const ImageResizer = () => {
+  let { setIsolaEdiImg } = useContext(CmsContext);
+  let { setIsolaFlag } = useContext(EdiContext);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [imageId, setImageId] = useState(null); // Store the uploaded image ID
@@ -18,8 +21,8 @@ const ImageResizer = () => {
     setImage(file);
     setImageUrl(url);
 
-    // Upload the image using the ChangeUplode function
-    ChangeUplode(file, handleUploadSuccess, handleUploadError);
+    // Upload the original image
+    ChangeUplodeB(file, handleUploadSuccess, handleUploadError);
   };
 
   const handleUploadSuccess = (id) => {
@@ -31,25 +34,55 @@ const ImageResizer = () => {
     console.log('Image upload failed');
   };
 
+ 
+
   const handleSave = () => {
     if (image) {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const img = new Image();
-      img.src = imageUrl;
-
+      img.src = imageUrl; // آدرس اولیه تصویر
+  
       img.onload = () => {
+        // تنظیم ابعاد canvas به اندازه‌های جدید
         canvas.width = dimensions.width;
         canvas.height = dimensions.height;
+  
+        // رندر تصویر با ابعاد جدید روی canvas
         ctx.drawImage(img, 0, 0, dimensions.width, dimensions.height);
-        const dataUrl = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = 'resized-image.png';
-        a.click();
+  
+        // تبدیل تصویر ریسایز شده به Blob
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // ساخت URL از Blob برای استفاده به عنوان src
+              const resizedImageSrc = URL.createObjectURL(blob);
+              console.log('Final Resized Image src:', resizedImageSrc);
+  
+              // تبدیل Blob به File برای آپلود
+              const resizedFile = new File([blob], 'resized-image.png', { type: 'image/png' });
+  
+              // آپلود تصویر ریسایز شده با ChangeUplode
+              ChangeUplodeB(
+                resizedFile,
+                (id) => {
+                  console.log('Resized image uploaded successfully with ID:', id);
+                  setIsolaEdiImg(`${apiUrl}/${id}`)
+                },
+                (error) => {
+                  console.error('Failed to upload resized image:', error);
+                }
+              );
+            }
+          },
+          'image/png' // نوع فایل خروجی
+        );
       };
     }
+    setIsolaFlag(prev=>!prev)
   };
+  
+  
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',

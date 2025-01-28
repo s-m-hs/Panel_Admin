@@ -1,5 +1,5 @@
 // src/components/RichTextEditor.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import Toolbar from "./Toolbar";
 import ParagraphsRenderer from "./ParagraphsRenderer";
 import "./RichTextEditor.css";
@@ -8,8 +8,10 @@ import ImageResizer from "../../utils/ImageResizer";
 import fileUploadHandler from "../../utils/Functions";
 import apiUrl from "../../utils/ApiConfig";
 import ChangeUplode from "../../utils/ChangeUplode";
+import { CmsContext, EdiContext } from "../../context/CmsContext";
 
 const RichTextEditor = ({bodyString}) => {
+    let {isolaEdiImg,setIsolaSave}=useContext(CmsContext)
   const navigate = useNavigate();
   const [paragraphs, setParagraphs] = useState(
     JSON.parse(localStorage.getItem("paragraphs")) || []
@@ -18,10 +20,14 @@ const RichTextEditor = ({bodyString}) => {
   const [activeRow, setActiveRow] = useState(null);
   const [activeElement, setActiveElement] = useState(null);
   const [isImageSelected, setIsImageSelected] = useState(false);
+const [showImageDiv,setShowImageDiv]=useState(false)
+const[isolaFlag,setIsolaFlag]=useState(false)
+  const contentRef = useRef(null);
+
 
   const [imageSettings, setImageSettings] = useState({
-    width: 200,
-    height: 200,
+    // width: auto,
+    // height: auto,
     borderRadius: 0,
   });
 
@@ -805,41 +811,33 @@ useEffect(() => {
     const fileChange3 = (e) => {
       setFile2(e.target.files[0])
     }
-    const fileChange4 = (e) => {
-      setFile2('')
-      setImgUrl2(e.target.value)
-    }
+    //to uploud image by server
   useEffect(() => {
     if (file2?.name) {
       fileUploadHandler(file2,setImgUrl2)
-      handleImageUpload()
 
     }
-    // handleImageUpload()
-
+ 
   }, [file2])
+///to set image in editore
+  useEffect(()=>{
+    if(isolaEdiImg){
+      handleImageUpload()
+    }
+  },[isolaEdiImg])
   const handleImageUpload = () => {
-    // if (file) {
-      // فراخوانی ChangeUpload برای آپلود فایل
-      // ChangeUplode(
-      //   file,
-   
-        // () => {
-          const newImage = {
-            
+          const newImage = {  
             type: "image",
-            src:`${apiUrl}/${imgUrl2}`,
-            // src: `${apiUrl}/api/CyFiles/download/${uploadedFileId}`, // لینک تصویر آپلود شده
+            src: isolaEdiImg,
+            // src:`${apiUrl}/${imgUrl2}`,
             style: {
-              width: imageSettings.width,
-              height: imageSettings.height,
+              // width: imageSettings.width,
+              // height: imageSettings.height,
               borderRadius: imageSettings.borderRadius,
               margin: "0px",
               order: 2,
             },
           };
-          console.log(newImage)
-  
           if (activeRow !== null) {
             // افزودن تصویر در همان ردیف انتخاب شده
             setParagraphs((prev) =>
@@ -886,86 +884,120 @@ useEffect(() => {
     // }
   };
   
-  console.log(` ${apiUrl}/${imgUrl2}`)
-  console.log(file2)
-  console.log(fileInputRef.current)
+  // console.log(` ${apiUrl}/${imgUrl2}`)
+
   return (
-    <div className="rich-text-editor">
-          {/* <ImageResizer/> */}
-      <Toolbar
-        addNewParagraph={addNewParagraph}
-        addNewRow={addNewRow}
-        addNewTextField={addNewTextField}
-        openFileDialog={openFileDialog}
-        changeAlignment={changeAlignment}
-        changeTextAlignment={changeTextAlignment}
-        handleBoldToggle={handleBoldToggle}
-        deleteParagraph={deleteParagraph}
-        deleteActiveRow={deleteActiveRow}
-        deleteActiveElement={deleteActiveElement}
-        activeElement={activeElement}
-        activeRow={activeRow}
-        paragraphs={paragraphs}
-        activeParagraph={activeParagraph}
-        fileInputRef={fileInputRef}
-        handleImageUpload={handleImageUpload}
-        rowSpacing={rowSpacing}
-        // setRowSpacing={setRowSpacing}
-        elementGap={elementGap}
-        setElementGap={setElementGap}
-        activePopup={activePopup}
-        setActivePopup={setActivePopup}
-        isBold={isBold}
-        textColor={textColor}
-        handleTextColorChange={handleTextColorChange}
-        fontSize={fontSize}
-        handleFontSizeChange={handleFontSizeChange}
-        toggleRowDirection={toggleRowDirection}
-        setRowSpacing={handleRowSpacingChange}
 
-      />
+   <EdiContext.Provider value={{showImageDiv,setShowImageDiv,isolaFlag,setIsolaFlag}}>
+       <div className="rich-text-editor">
+        {showImageDiv &&  <div className="reach_img_div centerr">
+            <ImageResizer/>
+        </div>}
+       
+    <Toolbar
+      addNewParagraph={addNewParagraph}
+      addNewRow={addNewRow}
+      addNewTextField={addNewTextField}
+      openFileDialog={openFileDialog}
+      changeAlignment={changeAlignment}
+      changeTextAlignment={changeTextAlignment}
+      handleBoldToggle={handleBoldToggle}
+      deleteParagraph={deleteParagraph}
+      deleteActiveRow={deleteActiveRow}
+      deleteActiveElement={deleteActiveElement}
+      activeElement={activeElement}
+      activeRow={activeRow}
+      paragraphs={paragraphs}
+      activeParagraph={activeParagraph}
+      fileInputRef={fileInputRef}
+      // handleImageUpload={handleImageUpload}
+      rowSpacing={rowSpacing}
+      // setRowSpacing={setRowSpacing}
+      elementGap={elementGap}
+      setElementGap={setElementGap}
+      activePopup={activePopup}
+      setActivePopup={setActivePopup}
+      isBold={isBold}
+      textColor={textColor}
+      handleTextColorChange={handleTextColorChange}
+      fontSize={fontSize}
+      handleFontSizeChange={handleFontSizeChange}
+      toggleRowDirection={toggleRowDirection}
+      setRowSpacing={handleRowSpacingChange}
 
-      {/* <div className="editor-buttons">
-        <button className="save-button" onClick={saveData}>
-          ذخیره
-        </button>
-        <button className="view-button" onClick={viewData}>
-          مشاهده
-        </button>
-      </div> */}
+    />
+{/* 
+    <div className="editor-buttons">
+      <button className="save-button" onClick={()=>{
+        setIsolaSave(prev=>!prev)
+      }}>
+        ذخیره
+      </button>
+      <button className="view-button" onClick={viewData}>
+        مشاهده
+      </button>
+    </div>  */}
 
-      <ParagraphsRenderer
-        paragraphs={paragraphs}
-        activeParagraph={activeParagraph}
-        activeRow={activeRow}
-        activeElement={activeElement}
-        setActiveParagraph={setActiveParagraph}
-        setActiveRow={setActiveRow}
-        setActiveElement={setActiveElement}
-        setIsImageSelected={setIsImageSelected}
-        setActivePopup={setActivePopup}
-        handleTextResize={handleTextResize}
-        setImageSettings={setImageSettings}
-        setParagraphs={setParagraphs}
-      />
+    <ParagraphsRenderer
+      paragraphs={paragraphs}
+      activeParagraph={activeParagraph}
+      activeRow={activeRow}
+      activeElement={activeElement}
+      setActiveParagraph={setActiveParagraph}
+      setActiveRow={setActiveRow}
+      setActiveElement={setActiveElement}
+      setIsImageSelected={setIsImageSelected}
+      setActivePopup={setActivePopup}
+      handleTextResize={handleTextResize}
+      setImageSettings={setImageSettings}
+      setParagraphs={setParagraphs}
+    />
 
 {/* <input
-  type="file"
-  ref={fileInputRef}
-  style={{ display: "none" }}
-  accept="image/*"
-  onChange={handleImageUpload}
+type="file"
+ref={fileInputRef}
+style={{ display: "none" }}
+accept="image/*"
+onChange={handleImageUpload}
 />; */}
-      <input
-        type="file" 
-        onChange={fileChange3}
-        // value={imgUrl2? ` ${apiUrl}/${imgUrl2}`:''}
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        accept="image/*"
-        // onChange={handleImageUpload}
-      />
-    </div>
+    <input
+      type="file" 
+      onChange={fileChange3}
+      // value={imgUrl2? ` ${apiUrl}/${imgUrl2}`:''}
+      ref={fileInputRef}
+      style={{ display: "none" }}
+      accept="image/*"
+      // onChange={handleImageUpload}
+    />
+
+<>
+<hr/>
+          <h3 className='boxSh' style={{fontWeight:'600', width:'300px', margin:'0 auto', textAlign:'center'}}>پیش نمایش ادیتور</h3>
+      <div className='row ' style={{height:'100vh',border:"1px solid", width:'90%', margin:'0 auto' }}>
+      <div  className="content-wrapper" ref={contentRef}  >
+        
+        <ParagraphsRenderer
+          paragraphs={paragraphs}
+          activeParagraph={null}
+          activeRow={null}
+          activeElement={null}
+          setActiveParagraph={() => {}}
+          setActiveRow={() => {}}
+          setActiveElement={() => {}}
+          setIsImageSelected={() => {}}
+          setActivePopup={() => {}}
+          handleTextResize={() => {}}
+          setImageSettings={() => {}}
+          setParagraphs={() => {}}
+          isViewMode={true}
+        />
+      </div>
+         </div>
+</>
+
+  </div>
+   </EdiContext.Provider>
+ 
   );
 };
 

@@ -125,7 +125,7 @@ const funcA=()=>{
       cyCategoryId: data.category
     }
     console.log(obj)
-// ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
+ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
 localStorage.removeItem('paragraphs')
   } 
   ////////////////////////////////
@@ -166,29 +166,25 @@ localStorage.removeItem('paragraphs')
 
 
 
-useEffect(() => {
-  if (contentRef.current) {
-    setIsplaLocal(contentRef.current) 
-    // کاری که می‌خواهید انجام دهید
-  }
-}, [paragraphs]);
+// useEffect(() => {
+//   if (contentRef.current) {
+//     setIsplaLocal(contentRef.current) 
+//     // کاری که می‌خواهید انجام دهید
+//   }
+// }, [paragraphs]);
 
 
 const clickkk=()=>{
   setParagraphs(JSON.parse(localStorage.getItem("paragraphs")))
   setIsplaLocal(contentRef.current) 
-  // console.log(typeof localStorage.getItem("paragraphs"))
-  // console.log(JSON.parse(localStorage.getItem("paragraphs")))
+  console.log(typeof localStorage.getItem("paragraphs"))
+  console.log(JSON.parse(localStorage.getItem("paragraphs")))
  
 
 }
-// useEffect(() => {
-//   if (contentRef.current) {
-//     setIsplaLocal(contentRef.current) 
-
-//      // اینجا مقدار درست خواهد بود
-//   }
-// }, [flagIsolaEditor])
+useEffect(() => {
+clickkk()
+}, [cmsContext.isolaSave])
   return (
     <div className='container'>  
       <div className='row'>
@@ -471,9 +467,9 @@ dir='rtl'
     !flagReset && <div>
           {/* <ImageResizer/> */}
           <div className="editor-buttons">
-        <button className="save-button" onClick={()=>clickkk()}>
+        {/* <button className="save-button" onClick={()=>clickkk()}>
           ذخیره
-        </button>
+        </button> */}
         {/* <button className="view-button" onClick={()=>{
           setShow(true)
         }}>

@@ -1,5 +1,5 @@
 // src/components/Toolbar.jsx
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   FaAlignLeft,
   FaAlignCenter,
@@ -17,6 +17,7 @@ import {
   FaTextHeight
 } from 'react-icons/fa'
 import './Toolbar.css'
+import { CmsContext, EdiContext } from '../../context/CmsContext'
 
 const Toolbar = ({
   addNewParagraph,
@@ -48,6 +49,8 @@ const Toolbar = ({
   handleFontSizeChange,
   toggleRowDirection
 }) => {
+  let{showImageDiv,setShowImageDiv,setIsolaFlag}=useContext(EdiContext)
+  let{setIsolaSave}=useContext(CmsContext)
   // تابع برای تعیین قابلیت فعال بودن دکمه‌ها
   const isTextActive = () => {
     if (activeElement === null) return false
@@ -92,7 +95,10 @@ const Toolbar = ({
       {/* آپلود عکس */}
       <div className='icon-button-container'>
         <button
-          onClick={openFileDialog}
+          // onClick={openFileDialog}
+          onClick={()=>{
+            setShowImageDiv(prev=>!prev)
+          }}
           className='toolbar-button upload-image'
         >
           <FaUpload size={16} />
@@ -333,6 +339,17 @@ const Toolbar = ({
           <span className='tooltip'>تغییر جهت ردیف</span>
         </button>
       </div>
+      
+    <div className="editor-buttons">
+      <button className="save-button" onClick={()=>{
+        setIsolaSave(prev=>!prev)
+      }}>
+        ذخیره
+      </button>
+      {/* <button className="view-button" onClick={viewData}>
+        مشاهده
+      </button> */}
+    </div> 
     </div>
   )
 }

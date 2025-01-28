@@ -33,8 +33,9 @@ import RichTextEditor from "../../IsolaEditor/RichTextEditor";
 import ParagraphsRenderer from "../../IsolaEditor/ParagraphsRenderer";
 
 export default function ShowSubjects({ showw }) {
-  let { xtSearchA, xtSearchB, xtSearchC, xtSearchD, setResetSearchbox } =
+  let { xtSearchA, xtSearchB, xtSearchC, xtSearchD, setResetSearchbox ,isolaEdiImg,setIsolaSave} =
     useContext(CmsContext);
+    
     const navigate = useNavigate();
     const homeContext = useContext(HomeContext);
     const cmsContext = useContext(CmsContext);
@@ -293,6 +294,7 @@ export default function ShowSubjects({ showw }) {
     resetB(setValueB(""));
     setResetSearchbox(true);
     localStorage.removeItem("paragraphs");
+    isolaEdiImg('')
   };
 
   const handleSubmitEdit = (data) => {
@@ -319,7 +321,7 @@ export default function ShowSubjects({ showw }) {
       categoryIds: data.updat.category2 ? data.updat.category2 : null,
     };
     console.log(obj) 
-    // ApiPutX("/api/CySubjects", headerAuth, putId, obj, funcA);
+    ApiPutX("/api/CySubjects", headerAuth, putId, obj, funcA);
   };
   ////////////////////////////
   const funcB = () => {
@@ -1077,7 +1079,7 @@ export default function ShowSubjects({ showw }) {
                               setShowB(true);
                             }}
                           >
-                            ذخیره
+                            مشاهده
                           </button>
                         </div>
                         <RichTextEditor bodyString={bodyString} />
@@ -1095,7 +1097,7 @@ export default function ShowSubjects({ showw }) {
       <>
         {/* editor html modal===> */}
 
-        <Modal
+        {/* <Modal
           fullscreen={fullscreenB}
           show={showB}
           dialogClassName="modal-90w"
@@ -1104,7 +1106,6 @@ export default function ShowSubjects({ showw }) {
         >
           <Modal.Header closeButton></Modal.Header>
           <Modal.Body>
-            {/* <div dangerouslySetInnerHTML={{__html:ckValue}}></div> */}
 
             <div className="content-wrapper" ref={contentRef}>
               <ParagraphsRenderer
@@ -1124,7 +1125,7 @@ export default function ShowSubjects({ showw }) {
               />
             </div>
           </Modal.Body>
-        </Modal>
+        </Modal> */}
       </>
       {/*  */}
     </div>

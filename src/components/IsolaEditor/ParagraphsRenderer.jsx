@@ -33,7 +33,7 @@ const ParagraphsRenderer = ({
 
   return (
     <div className={`content-area ${isViewMode ? 'view-mode' : ''}`}>
-      {paragraphs.map((paraContent, paraIdx) => {
+      {paragraphs?.map((paraContent, paraIdx) => {
         const flexDirection =
           paraContent.layout === "horizontal" ? "row" : "column";
         const justifyContent =

@@ -40,4 +40,12 @@
   .view-button:hover {
     background-color: #0069d9;
   }
-  
+  .reach_img_div{
+    min-width: 400px;
+    background-color: #edeeee;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 50px;
+    z-index: 1500;
+  }
