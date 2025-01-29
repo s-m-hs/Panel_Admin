@@ -9,9 +9,10 @@ import fileUploadHandler from "../../utils/Functions";
 import apiUrl from "../../utils/ApiConfig";
 import ChangeUplode from "../../utils/ChangeUplode";
 import { CmsContext, EdiContext } from "../../context/CmsContext";
+import Modal from "react-bootstrap/Modal";
 
 const RichTextEditor = ({bodyString}) => {
-    let {isolaEdiImg,setIsolaSave}=useContext(CmsContext)
+    let {isolaEdiImg,setIsolaSave,setIsplaLocal}=useContext(CmsContext)
   const navigate = useNavigate();
   const [paragraphs, setParagraphs] = useState(
     JSON.parse(localStorage.getItem("paragraphs")) || []
@@ -23,6 +24,8 @@ const RichTextEditor = ({bodyString}) => {
 const [showImageDiv,setShowImageDiv]=useState(false)
 const[isolaFlag,setIsolaFlag]=useState(false)
   const contentRef = useRef(null);
+  const [showB, setShowB] = useState(false);
+  const [fullscreenB, setFullscreenB] = useState(true);
 
 
   const [imageSettings, setImageSettings] = useState({
@@ -820,15 +823,16 @@ useEffect(() => {
  
   }, [file2])
 ///to set image in editore
-  useEffect(()=>{
-    if(isolaEdiImg){
-      handleImageUpload()
-    }
-  },[isolaEdiImg])
-  const handleImageUpload = () => {
+  // useEffect(()=>{
+  //   if(isolaEdiImg){
+  //     handleImageUpload()
+  //   }
+  // },[isolaEdiImg])
+  const handleImageUpload = (url) => {
           const newImage = {  
             type: "image",
-            src: isolaEdiImg,
+            src: url,
+            // src: isolaEdiImg,
             // src:`${apiUrl}/${imgUrl2}`,
             style: {
               // width: imageSettings.width,
@@ -885,13 +889,17 @@ useEffect(() => {
   };
   
   // console.log(` ${apiUrl}/${imgUrl2}`)
+ useEffect(() => {
+    setParagraphs(JSON.parse(localStorage.getItem("paragraphs")));
+    setIsplaLocal(contentRef.current);
 
+  }, [showB]);
   return (
 
    <EdiContext.Provider value={{showImageDiv,setShowImageDiv,isolaFlag,setIsolaFlag}}>
        <div className="rich-text-editor">
         {showImageDiv &&  <div className="reach_img_div centerr">
-            <ImageResizer/>
+            <ImageResizer handleImageUpload={handleImageUpload} />
         </div>}
        
     <Toolbar
@@ -924,6 +932,7 @@ useEffect(() => {
       handleFontSizeChange={handleFontSizeChange}
       toggleRowDirection={toggleRowDirection}
       setRowSpacing={handleRowSpacingChange}
+      showModal={()=>setShowB(prev=>!prev)}
 
     />
 {/* 
@@ -972,8 +981,17 @@ onChange={handleImageUpload}
 
 <>
 <hr/>
-          <h3 className='boxSh' style={{fontWeight:'600', width:'300px', margin:'0 auto', textAlign:'center'}}>پیش نمایش ادیتور</h3>
-      <div className='row ' style={{height:'100vh',border:"1px solid", width:'90%', margin:'0 auto' }}>
+
+<Modal
+          fullscreen={fullscreenB}
+          show={showB}
+          dialogClassName="modal-90w"
+          aria-labelledby="example-custom-modal-styling-title"
+          onHide={() => setShowB(false)}
+        >
+          <Modal.Header closeButton></Modal.Header>
+          <Modal.Body>
+      <div className='row ' style={{height:'auto',border:"1px solid", width:'90%', margin:'0 auto' }}>
       <div  className="content-wrapper" ref={contentRef}  >
         
         <ParagraphsRenderer
@@ -993,6 +1011,8 @@ onChange={handleImageUpload}
         />
       </div>
          </div>
+         </Modal.Body>
+         </Modal> 
 </>
 
   </div>

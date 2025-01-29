@@ -33,7 +33,7 @@ import RichTextEditor from "../../IsolaEditor/RichTextEditor";
 import ParagraphsRenderer from "../../IsolaEditor/ParagraphsRenderer";
 
 export default function ShowSubjects({ showw }) {
-  let { xtSearchA, xtSearchB, xtSearchC, xtSearchD, setResetSearchbox ,isolaEdiImg,setIsolaSave} =
+  let { xtSearchA, xtSearchB, xtSearchC, xtSearchD, setResetSearchbox ,isolaEdiImg,setIsolaSave,isolaLocal} =
     useContext(CmsContext);
     
     const navigate = useNavigate();
@@ -77,7 +77,9 @@ export default function ShowSubjects({ showw }) {
   const [bodyString, setBodyString] = useState("");
   const contentRef = useRef(null);
   const [paragraphs, setParagraphs] = useState("");
-  const [isolaLocal, setIsplaLocal] = useState("");
+  // const [isolaLocal, setIsplaLocal] = useState("");
+
+  const [flaggg,setFlaggg]=useState(false)
   /////////////////
   const [selectedOrder, setSelectedOrder] = useState({
     name: "جدید ترین",
@@ -305,10 +307,10 @@ export default function ShowSubjects({ showw }) {
       urL_Title: data.updat.url,
       describtion: data.updat.description,
       ///state of isola editor 
-      editorState: bodyString ? 2 : "",
+      editorState: editorState,
       bodyString: bodyString ? localStorage.getItem("paragraphs") : "",
       /////////////////
-      body: bodyString && isolaLocal ? isolaLocal.outerHTML : ckValue,
+      body: (bodyString && isolaLocal) ? isolaLocal.outerHTML : ckValue,
       tag: data.updat.tag,
       extra: data.updat.extra,
       dateShow: value4,
@@ -322,7 +324,7 @@ export default function ShowSubjects({ showw }) {
     };
     console.log(obj) 
     ApiPutX("/api/CySubjects", headerAuth, putId, obj, funcA);
-  };
+  }; 
   ////////////////////////////
   const funcB = () => {
     setSearchState([]);
@@ -416,11 +418,13 @@ export default function ShowSubjects({ showw }) {
   }, [show]);
 
   /////isola useeffect
-  useEffect(() => {
-    setParagraphs(JSON.parse(localStorage.getItem("paragraphs")));
-    setIsplaLocal(contentRef.current);
+  // useEffect(() => {
+  //   setParagraphs(JSON.parse(localStorage.getItem("paragraphs")));
+  //   setIsplaLocal(contentRef.current);
 
-  }, [showB]);
+  // }, [flaggg]);
+  console.log(isolaLocal)
+  console.log(ckValue)
 //////////////////////////////
 
   useEffect(() => {
@@ -855,7 +859,7 @@ export default function ShowSubjects({ showw }) {
 
                           <input
                             type="file"
-                            placeholder="عکس کوچک"
+                            placeholder="عکس کوچک" 
                             className="producted-img-input"
                             onChange={fileChange}
                           />
@@ -1071,17 +1075,12 @@ export default function ShowSubjects({ showw }) {
 
                     {editorState == 2 && (
                       <>
-                        <div className="editor-buttons">
-                          {/* <button className="save-button">ذخیره</button> */}
-                          <button
-                            className="view-button"
-                            onClick={() => {
-                              setShowB(true);
-                            }}
-                          >
-                            مشاهده
-                          </button>
-                        </div>
+         {/* <button className="view-button" onClick={()=>{
+          setFlaggg(!flaggg)
+          
+        }}>
+          مشاهده
+        </button> */}
                         <RichTextEditor bodyString={bodyString} />
                       </>
                     )}
@@ -1093,11 +1092,27 @@ export default function ShowSubjects({ showw }) {
           </div>
         </Modal.Body>
       </Modal>
-
+      {/* <div className="content-wrapper" ref={contentRef}>
+              <ParagraphsRenderer
+                paragraphs={paragraphs}
+                activeParagraph={null}
+                activeRow={null}
+                activeElement={null}
+                setActiveParagraph={() => {}}
+                setActiveRow={() => {}}
+                setActiveElement={() => {}}
+                setIsImageSelected={() => {}}
+                setActivePopup={() => {}}
+                handleTextResize={() => {}}
+                setImageSettings={() => {}}
+                setParagraphs={() => {}}
+                isViewMode={true}
+              />
+            </div> */}
       <>
         {/* editor html modal===> */}
 
-        {/* <Modal
+        {/* {<Modal
           fullscreen={fullscreenB}
           show={showB}
           dialogClassName="modal-90w"
@@ -1125,7 +1140,7 @@ export default function ShowSubjects({ showw }) {
               />
             </div>
           </Modal.Body>
-        </Modal> */}
+        </Modal> } */}
       </>
       {/*  */}
     </div>

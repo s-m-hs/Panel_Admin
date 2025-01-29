@@ -40,6 +40,7 @@ const[xtSearchG,setXtSearchG]=useState('')
 const[flagError,setFlagError]=useState(false)
 const[isolaEdiImg,setIsolaEdiImg]=useState('')
 const [isolaSave,setIsolaSave]=useState(false)
+ const [isolaLocal,setIsplaLocal]=useState('')
 
 const navigatt = useNavigate()
 let{isLogin}=useContext(HomeContext)
@@ -74,7 +75,7 @@ const location = useLocation();
         resetSearchbox,setResetSearchbox,
         flagError,setFlagError,
         isolaEdiImg,setIsolaEdiImg,
-        isolaSave,setIsolaSave
+        isolaSave,setIsolaSave,isolaLocal,setIsplaLocal
       }}>
         <div className="cms-container">
 

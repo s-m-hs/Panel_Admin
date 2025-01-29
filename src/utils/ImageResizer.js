@@ -7,9 +7,9 @@ import { CmsContext, EdiContext } from '../context/CmsContext';
 import ChangeUplodeB from './ChangeUplodeB';
 import apiUrl from './ApiConfig';
 
-const ImageResizer = () => {
+const ImageResizer = ({handleImageUpload,}) => {
   let { setIsolaEdiImg } = useContext(CmsContext);
-  let { setIsolaFlag } = useContext(EdiContext);
+  // let { setIsolaFlag } = useContext(EdiContext);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [imageId, setImageId] = useState(null); // Store the uploaded image ID
@@ -67,7 +67,8 @@ const ImageResizer = () => {
                 resizedFile,
                 (id) => {
                   console.log('Resized image uploaded successfully with ID:', id);
-                  setIsolaEdiImg(`${apiUrl}/${id}`)
+                  // setIsolaEdiImg()
+                  handleImageUpload(`${apiUrl}/${id}`)
                 },
                 (error) => {
                   console.error('Failed to upload resized image:', error);
@@ -79,7 +80,7 @@ const ImageResizer = () => {
         );
       };
     }
-    setIsolaFlag(prev=>!prev)
+    // setIsolaFlag(prev=>!prev)
   };
   
   
@@ -93,7 +94,7 @@ const ImageResizer = () => {
     <div>
       <div {...getRootProps()} style={{ border: '2px dashed gray', padding: '20px', textAlign: 'center' }}>
         <input {...getInputProps()} />
-        <p>Drag & drop an image here, or click to select one</p>
+        <p>عکس را انتخاب کنید یا یه اینجا بکشید</p>
       </div>
 
       {imageUrl && (
@@ -109,7 +110,7 @@ const ImageResizer = () => {
           </ResizableBox>
           <div>
             <button onClick={handleSave} style={{ marginTop: '10px' }}>
-              Save Image
+              ذخیره عکس
             </button>
           </div>
         </div>

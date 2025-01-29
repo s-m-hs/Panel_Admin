@@ -22,7 +22,7 @@ const ParagraphsRenderer = ({
     switch (alignment) {
       case "left":
         return "flex-end";
-      case "center":
+      case "center": 
         return "center";
       case "right":
         return "flex-start";

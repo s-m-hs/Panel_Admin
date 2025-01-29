@@ -18,7 +18,7 @@ const cmscontext=useContext(CmsContext)
     
 const get=()=>{
     async function myApp(){
-        const res=await fetch (`${apiUrl}/api/CySubjects/28`,{
+        const res=await fetch (`${apiUrl}/api/CySubjects/1102`,{
             method:'GET',
             headers:{
                 Authorization:`Bearer ${cmscontext.token.token}`,
@@ -48,7 +48,6 @@ get()
   return (
     <div>
         <div dangerouslySetInnerHTML={{__html:subject.body}}></div>
-        <ImageResizer/>
     {/* <TextEditor height={!flagEditor ? '400px' :  '100vh'  } image={true} value={ckValue} onChange={handleEditorChange} /> */}
 
     </div>

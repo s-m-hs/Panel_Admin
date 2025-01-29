@@ -41,9 +41,9 @@ export default function NewSubject({showw}) {
   const [imgUrl2, setImgUrl2] = useState('')
     const [flagReset, setFlagReset] = useState(true)
     const [tabId, setTabId] = useState('editor1')
-    const [isolaLocal,setIsplaLocal]=useState('')
+    // const [isolaLocal,setIsplaLocal]=useState('')
     const [paragraphs, setParagraphs] = useState(JSON.parse(localStorage.getItem("paragraphs")) || []);
-    const [editorState,setEditorState]=useState(0)
+    const [editorState,setEditorState]=useState('')
 
   const navigate=useNavigate()
   const cmsContext=useContext(CmsContext)
@@ -102,6 +102,8 @@ const funcA=()=>{
   setFile2('')
   setImgUrl2('')
   setCkValue('')
+  localStorage.removeItem('paragraphs')
+  cmsContext.setIsplaLocal('')
 }
 
   const handleSubmitEdit = (data) => {
@@ -113,7 +115,8 @@ const funcA=()=>{
       describtion: data.description,
       editorState:editorState,
       bodyString:paragraphs ? localStorage.getItem("paragraphs") : '' ,
-      body:flagReset ?ckValue : isolaLocal.outerHTML,
+      body:flagReset ?ckValue :  
+      cmsContext.isolaLocal? cmsContext.isolaLocal.outerHTML :'',
       tag: data.tag,
       extra: data.extra,
       dateShow: value4,
@@ -126,7 +129,6 @@ const funcA=()=>{
     }
     console.log(obj)
 ApiPostX('/api/CySubjects',headerAuth,obj,funcA)
-localStorage.removeItem('paragraphs')
   } 
   ////////////////////////////////
   const categoryIdChild = () => {
@@ -153,11 +155,16 @@ localStorage.removeItem('paragraphs')
     // cmsContext.setFlagResetInput(true)
     setTabId(tabName)
     if(tabName==="editor1"){
+      localStorage.removeItem('paragraphs')
   setFlagReset(true)
-  setEditorState('')
+  setEditorState(null)
+  cmsContext.setIsplaLocal('')
+
 }else if(tabName==="editor2"){
+  setCkValue('')
   setFlagReset(false)
   setEditorState(2)
+  cmsContext.setIsplaLocal('')
 }
 } 
 // useEffect(()=>{
@@ -174,17 +181,23 @@ localStorage.removeItem('paragraphs')
 // }, [paragraphs]);
 
 
-const clickkk=()=>{
-  setParagraphs(JSON.parse(localStorage.getItem("paragraphs")))
-  setIsplaLocal(contentRef.current) 
-  console.log(typeof localStorage.getItem("paragraphs"))
-  console.log(JSON.parse(localStorage.getItem("paragraphs")))
+// const clickkk=()=>{
+//   setParagraphs(JSON.parse(localStorage.getItem("paragraphs")))
+//   cmsContext.setIsplaLocal('') 
+//   console.log(typeof localStorage.getItem("paragraphs"))
+//   console.log(JSON.parse(localStorage.getItem("paragraphs")))
  
 
-}
-useEffect(() => {
-clickkk()
-}, [cmsContext.isolaSave])
+// }
+// useEffect(() => {
+// clickkk()
+// }, [flagEditor])
+
+//   useEffect(() => {
+//     setParagraphs(JSON.parse(localStorage.getItem("paragraphs")));
+//     setIsplaLocal(contentRef.current);
+
+//   }, []);
   return (
     <div className='container'>  
       <div className='row'>
@@ -498,7 +511,7 @@ dir='rtl'
           </div>
         </div>
       </div>
-      <>
+      {/* {<>
       {tabId==='editor2' && <>
       
           <hr/>
@@ -526,7 +539,7 @@ dir='rtl'
 
       </>}
     
-        </>
+        </> } */}
 
     </div>
   )

@@ -47,7 +47,8 @@ const Toolbar = ({
   handleTextColorChange,
   fontSize,
   handleFontSizeChange,
-  toggleRowDirection
+  toggleRowDirection,
+  showModal
 }) => {
   let{showImageDiv,setShowImageDiv,setIsolaFlag}=useContext(EdiContext)
   let{setIsolaSave}=useContext(CmsContext)
@@ -343,6 +344,7 @@ const Toolbar = ({
     <div className="editor-buttons">
       <button className="save-button" onClick={()=>{
         setIsolaSave(prev=>!prev)
+        showModal()
       }}>
         ذخیره
       </button>
