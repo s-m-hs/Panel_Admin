@@ -48,7 +48,7 @@ const CustomToolbar = ({onInsertHTML}) => (
 <button className="ql-align" value="justify" title="Justify Text"></button>
 
   
-  {/* <button className="ql-link" title="Add Link"></button> */}
+  <button className="ql-link" title="Add Link"></button>
   {/* <button className="ql-video" title="Add Video"></button> */}
 
   <button className="ql-clean" title="Remove Formatting"></button>
