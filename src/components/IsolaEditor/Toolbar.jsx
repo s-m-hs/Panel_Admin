@@ -50,8 +50,9 @@ const Toolbar = ({
   toggleRowDirection,
   showModal
 }) => {
-  let{showImageDiv,setShowImageDiv,setIsolaFlag}=useContext(EdiContext)
+  let{setShowImageDiv}=useContext(EdiContext)
   let{setIsolaSave}=useContext(CmsContext)
+
   // تابع برای تعیین قابلیت فعال بودن دکمه‌ها
   const isTextActive = () => {
     if (activeElement === null) return false
@@ -105,7 +106,10 @@ const Toolbar = ({
           <FaUpload size={16} />
           <span className='tooltip'>آپلود عکس</span>
         </button>
+
       </div>
+
+     
 
       {/* تراز بندی عناصر */}
       <div className='icon-button-container'>

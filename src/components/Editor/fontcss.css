@@ -140,6 +140,13 @@
   z-index: 1000;
 }
 
+.textEditor-alttext-input{
+  margin: 5px;
+  position: absolute;
+  right: 60px;
+outline: none;
+  z-index: 1000;}
+
 .textEditor-img-icon {
   position: absolute;
   right: 20px;

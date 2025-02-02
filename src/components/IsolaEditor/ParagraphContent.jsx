@@ -1,6 +1,7 @@
 // src/components/ParagraphContent/ParagraphContent.jsx
-import React from "react";
+import React, { useContext } from "react";
 import "./ParagraphContent.css";
+import { EdiContext } from "../../context/CmsContext";
 
 const ParagraphContent = ({
   item,
@@ -177,7 +178,8 @@ const ParagraphContent = ({
       >
         <img
           src={item.src}
-          alt="تصویر"
+          alt={item.alt}
+          // alt="تصویر"
           style={{
             width: `${item.style.width}px`,
             height: `${item.style.height}px`,

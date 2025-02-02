@@ -11,8 +11,8 @@ import ChangeUplode from "../../utils/ChangeUplode";
 import { CmsContext, EdiContext } from "../../context/CmsContext";
 import Modal from "react-bootstrap/Modal";
 
-const RichTextEditor = ({bodyString}) => {
-    let {isolaEdiImg,setIsolaSave,setIsplaLocal}=useContext(CmsContext)
+const RichTextEditor = ({ bodyString }) => {
+  let {  setIsplaLocal } = useContext(CmsContext);
   const navigate = useNavigate();
   const [paragraphs, setParagraphs] = useState(
     JSON.parse(localStorage.getItem("paragraphs")) || []
@@ -21,8 +21,8 @@ const RichTextEditor = ({bodyString}) => {
   const [activeRow, setActiveRow] = useState(null);
   const [activeElement, setActiveElement] = useState(null);
   const [isImageSelected, setIsImageSelected] = useState(false);
-const [showImageDiv,setShowImageDiv]=useState(false)
-const[isolaFlag,setIsolaFlag]=useState(false)
+  const [showImageDiv, setShowImageDiv] = useState(false);
+  const [isolaFlag, setIsolaFlag] = useState(false);
   const contentRef = useRef(null);
   const [showB, setShowB] = useState(false);
   const [fullscreenB, setFullscreenB] = useState(true);
@@ -47,17 +47,16 @@ const[isolaFlag,setIsolaFlag]=useState(false)
   // ذخیره‌ی داده‌ها در localStorage هر بار که paragraphs تغییر می‌کند
   useEffect(() => {
     localStorage.setItem("paragraphs", JSON.stringify(paragraphs));
-   
   }, [paragraphs]);
 
-  useEffect(()=>{
-        setParagraphs([])  //<==to empty state to remove from local
-    if(bodyString){
-      let paragraf=JSON.parse(bodyString)
-      localStorage.setItem('paragraphs',JSON.stringify(paragraf))
-      setParagraphs( JSON.parse(localStorage.getItem("paragraphs")))
+  useEffect(() => {
+    setParagraphs([]); //<==to empty state to remove from local
+    if (bodyString) {
+      let paragraf = JSON.parse(bodyString);
+      localStorage.setItem("paragraphs", JSON.stringify(paragraf));
+      setParagraphs(JSON.parse(localStorage.getItem("paragraphs")));
     }
-  },[bodyString])
+  }, [bodyString]);
 
   const alignSelfValue = (alignment) => {
     switch (alignment) {
@@ -265,8 +264,6 @@ const[isolaFlag,setIsolaFlag]=useState(false)
   //     reader.readAsDataURL(file);
   //   }
   // };
-  
-  
 
   const deleteActiveElement = () => {
     if (activeElement === null) return;
@@ -435,12 +432,10 @@ const[isolaFlag,setIsolaFlag]=useState(false)
     if (
       activeElement !== null &&
       ((activeRow !== null &&
-        paragraphs[activeParagraph].elements[activeRow]?.elements[
-          activeElement
-        ]?.type === "text") ||
+        paragraphs[activeParagraph].elements[activeRow]?.elements[activeElement]
+          ?.type === "text") ||
         (activeRow === null &&
-          paragraphs[activeParagraph].elements[activeElement]?.type ===
-            "text"))
+          paragraphs[activeParagraph].elements[activeElement]?.type === "text"))
     ) {
       if (activeRow !== null) {
         setParagraphs((prev) =>
@@ -502,12 +497,10 @@ const[isolaFlag,setIsolaFlag]=useState(false)
     if (
       activeElement !== null &&
       ((activeRow !== null &&
-        paragraphs[activeParagraph].elements[activeRow]?.elements[
-          activeElement
-        ]?.type === "text") ||
+        paragraphs[activeParagraph].elements[activeRow]?.elements[activeElement]
+          ?.type === "text") ||
         (activeRow === null &&
-          paragraphs[activeParagraph].elements[activeElement]?.type ===
-            "text"))
+          paragraphs[activeParagraph].elements[activeElement]?.type === "text"))
     ) {
       if (activeRow !== null) {
         setParagraphs((prev) =>
@@ -569,12 +562,10 @@ const[isolaFlag,setIsolaFlag]=useState(false)
     if (
       activeElement !== null &&
       ((activeRow !== null &&
-        paragraphs[activeParagraph].elements[activeRow]?.elements[
-          activeElement
-        ]?.type === "text") ||
+        paragraphs[activeParagraph].elements[activeRow]?.elements[activeElement]
+          ?.type === "text") ||
         (activeRow === null &&
-          paragraphs[activeParagraph].elements[activeElement]?.type ===
-            "text"))
+          paragraphs[activeParagraph].elements[activeElement]?.type === "text"))
     ) {
       if (activeRow !== null) {
         setParagraphs((prev) =>
@@ -692,59 +683,59 @@ const[isolaFlag,setIsolaFlag]=useState(false)
     }
   };
 
-// در RichTextEditor.jsx
+  // در RichTextEditor.jsx
 
-// آپدیت فاصله بین ردیف‌ها
-useEffect(() => {
-  if (rowSpacing !== null && activeParagraph !== null) {
-    setParagraphs((prev) =>
-      prev.map((para, i) =>
-        i === activeParagraph
-          ? {
-              ...para,
-              elements: para.elements.map((el) =>
-                el.type === "row"
-                  ? {
-                      ...el,
-                      style: {
-                        ...el.style,
-                        marginBottom: `${rowSpacing}px`,
-                      },
-                    }
-                  : el
-              ),
-            }
-          : para
-      )
-    );
-  }
-}, [rowSpacing, activeParagraph]);
+  // آپدیت فاصله بین ردیف‌ها
+  useEffect(() => {
+    if (rowSpacing !== null && activeParagraph !== null) {
+      setParagraphs((prev) =>
+        prev.map((para, i) =>
+          i === activeParagraph
+            ? {
+                ...para,
+                elements: para.elements.map((el) =>
+                  el.type === "row"
+                    ? {
+                        ...el,
+                        style: {
+                          ...el.style,
+                          marginBottom: `${rowSpacing}px`,
+                        },
+                      }
+                    : el
+                ),
+              }
+            : para
+        )
+      );
+    }
+  }, [rowSpacing, activeParagraph]);
 
-// آپدیت فاصله افقی بین عناصر
-useEffect(() => {
-  if (elementGap !== null && activeParagraph !== null) {
-    setParagraphs((prev) =>
-      prev.map((para, i) =>
-        i === activeParagraph
-          ? {
-              ...para,
-              elements: para.elements.map((el) =>
-                el.type === "row"
-                  ? {
-                      ...el,
-                      style: {
-                        ...el.style,
-                        gap: `${elementGap}px`,
-                      },
-                    }
-                  : el
-              ),
-            }
-          : para
-      )
-    );
-  }
-}, [elementGap, activeParagraph]);
+  // آپدیت فاصله افقی بین عناصر
+  useEffect(() => {
+    if (elementGap !== null && activeParagraph !== null) {
+      setParagraphs((prev) =>
+        prev.map((para, i) =>
+          i === activeParagraph
+            ? {
+                ...para,
+                elements: para.elements.map((el) =>
+                  el.type === "row"
+                    ? {
+                        ...el,
+                        style: {
+                          ...el.style,
+                          gap: `${elementGap}px`,
+                        },
+                      }
+                    : el
+                ),
+              }
+            : para
+        )
+      );
+    }
+  }, [elementGap, activeParagraph]);
 
   // تابع تغییر جهت ردیف بین افقی و عمودی
   const toggleRowDirection = () => {
@@ -777,8 +768,7 @@ useEffect(() => {
 
   const saveData = () => {
     localStorage.setItem("paragraphs", JSON.stringify(paragraphs));
-    console.log(paragraphs)
-    
+
     alert("داده‌ها با موفقیت ذخیره شدند!");
   };
   const viewData = () => {
@@ -808,134 +798,129 @@ useEffect(() => {
       )
     );
   };
-    const [file2, setFile2] = useState({})
-    const [imgUrl2, setImgUrl2] = useState('')
-  
-    const fileChange3 = (e) => {
-      setFile2(e.target.files[0])
-    }
-    //to uploud image by server
+  const [file2, setFile2] = useState({});
+  const [imgUrl2, setImgUrl2] = useState("");
+
+  const fileChange3 = (e) => {
+    setFile2(e.target.files[0]);
+  };
+  //to uploud image by server
   useEffect(() => {
     if (file2?.name) {
-      fileUploadHandler(file2,setImgUrl2)
-
+      fileUploadHandler(file2, setImgUrl2);
     }
- 
-  }, [file2])
-///to set image in editore
+  }, [file2]);
+  ///to set image in editore
   // useEffect(()=>{
   //   if(isolaEdiImg){
   //     handleImageUpload()
   //   }
   // },[isolaEdiImg])
-  const handleImageUpload = (url) => {
-          const newImage = {  
-            type: "image",
-            src: url,
-            // src: isolaEdiImg,
-            // src:`${apiUrl}/${imgUrl2}`,
-            style: {
-              // width: imageSettings.width,
-              // height: imageSettings.height,
-              borderRadius: imageSettings.borderRadius,
-              margin: "0px",
-              order: 2,
-            },
-          };
-          if (activeRow !== null) {
-            // افزودن تصویر در همان ردیف انتخاب شده
-            setParagraphs((prev) =>
-              prev.map((para, i) =>
-                i === activeParagraph
-                  ? {
-                      ...para,
-                      elements: para.elements.map((el, idx) =>
-                        idx === activeRow
-                          ? {
-                              ...el,
-                              elements: [...el.elements, newImage],
-                              style: {
-                                ...el.style,
-                              },
-                            }
-                          : el
-                      ),
-                    }
-                  : para
-              )
-            );
-            setActiveElement(
-              paragraphs[activeParagraph]?.elements[activeRow]?.elements.length
-            );
-          } else {
-            // اگر ردیف انتخاب نشده باشد، تصویر مستقیماً به پاراگراف اضافه می‌شود
-            setParagraphs((prev) =>
-              prev.map((para, i) =>
-                i === activeParagraph
-                  ? {
-                      ...para,
-                      elements: [...para.elements, newImage],
-                    }
-                  : para
-              )
-            );
-            setActiveElement(paragraphs[activeParagraph]?.elements.length);
-          }
-          setIsImageSelected(true);
-          setActivePopup(null);
-        // }
-      // );
-    // }
+  const handleImageUpload = (url, altText) => {
+    console.log("Uploading image with altText:", altText); // چک مقدار altText قبل از ذخیره
+  
+    const newImage = {
+      type: "image",
+      src: url,
+      alt: altText, // اینجا مقدار altText را اضافه کردیم
+      style: {
+        borderRadius: imageSettings.borderRadius,
+        margin: "0px",
+        order: 2,
+      },
+    };
+  
+    console.log("New image object:", newImage); // بررسی می‌کنیم altText در این مرحله موجود باشد
+  
+    if (activeRow !== null) {
+      setParagraphs((prev) =>
+        prev.map((para, i) =>
+          i === activeParagraph
+            ? {
+                ...para,
+                elements: para.elements.map((el, idx) =>
+                  idx === activeRow
+                    ? {
+                        ...el,
+                        elements: [...el.elements, newImage],
+                        style: {
+                          ...el.style,
+                        },
+                      }
+                    : el
+                ),
+              }
+            : para
+        )
+      );
+    } else {
+      setParagraphs((prev) =>
+        prev.map((para, i) =>
+          i === activeParagraph
+            ? {
+                ...para,
+                elements: [...para.elements, newImage],
+              }
+            : para
+        )
+      );
+    }
+  
+    console.log("Updated paragraphs:", paragraphs); // بررسی کنیم altText در پاراگراف ذخیره می‌شود
+  
+    setIsImageSelected(true);
+    setActivePopup(null);
   };
   
   // console.log(` ${apiUrl}/${imgUrl2}`)
- useEffect(() => {
+  useEffect(() => {
     setParagraphs(JSON.parse(localStorage.getItem("paragraphs")));
     setIsplaLocal(contentRef.current);
-
   }, [showB]);
   return (
-
-   <EdiContext.Provider value={{showImageDiv,setShowImageDiv,isolaFlag,setIsolaFlag}}>
-       <div className="rich-text-editor">
-        {showImageDiv &&  <div className="reach_img_div centerr">
+    <EdiContext.Provider
+      value={{ showImageDiv, setShowImageDiv, isolaFlag, setIsolaFlag }}
+    >
+      <div className="rich-text-editor">
+        {showImageDiv && (
+          <div className="reach_img_div centerr">
             <ImageResizer handleImageUpload={handleImageUpload} />
-        </div>}
-       
-    <Toolbar
-      addNewParagraph={addNewParagraph}
-      addNewRow={addNewRow}
-      addNewTextField={addNewTextField}
-      openFileDialog={openFileDialog}
-      changeAlignment={changeAlignment}
-      changeTextAlignment={changeTextAlignment}
-      handleBoldToggle={handleBoldToggle}
-      deleteParagraph={deleteParagraph}
-      deleteActiveRow={deleteActiveRow}
-      deleteActiveElement={deleteActiveElement}
-      activeElement={activeElement}
-      activeRow={activeRow}
-      paragraphs={paragraphs}
-      activeParagraph={activeParagraph}
-      fileInputRef={fileInputRef}
-      // handleImageUpload={handleImageUpload}
-      rowSpacing={rowSpacing}
-      // setRowSpacing={setRowSpacing}
-      elementGap={elementGap}
-      setElementGap={setElementGap}
-      activePopup={activePopup}
-      setActivePopup={setActivePopup}
-      isBold={isBold}
-      textColor={textColor}
-      handleTextColorChange={handleTextColorChange}
-      fontSize={fontSize}
-      handleFontSizeChange={handleFontSizeChange}
-      toggleRowDirection={toggleRowDirection}
-      setRowSpacing={handleRowSpacingChange}
-      showModal={()=>setShowB(prev=>!prev)}
+          </div>
+        )}
 
-    />
-{/* 
+        <Toolbar
+          addNewParagraph={addNewParagraph}
+          addNewRow={addNewRow}
+          addNewTextField={addNewTextField}
+          openFileDialog={openFileDialog}
+          changeAlignment={changeAlignment}
+          changeTextAlignment={changeTextAlignment}
+          handleBoldToggle={handleBoldToggle}
+          deleteParagraph={deleteParagraph}
+          deleteActiveRow={deleteActiveRow}
+          deleteActiveElement={deleteActiveElement}
+          activeElement={activeElement}
+          activeRow={activeRow}
+          paragraphs={paragraphs}
+          activeParagraph={activeParagraph}
+          fileInputRef={fileInputRef}
+          // handleImageUpload={handleImageUpload}
+          rowSpacing={rowSpacing}
+          // setRowSpacing={setRowSpacing}
+          elementGap={elementGap}
+          setElementGap={setElementGap}
+          activePopup={activePopup}
+          setActivePopup={setActivePopup}
+          isBold={isBold}
+          textColor={textColor}
+          handleTextColorChange={handleTextColorChange}
+          fontSize={fontSize}
+          handleFontSizeChange={handleFontSizeChange}
+          toggleRowDirection={toggleRowDirection}
+          setRowSpacing={handleRowSpacingChange}
+          showModal={() => setShowB((prev) => !prev)}
+        />
+        {/* 
     <div className="editor-buttons">
       <button className="save-button" onClick={()=>{
         setIsolaSave(prev=>!prev)
@@ -947,77 +932,82 @@ useEffect(() => {
       </button>
     </div>  */}
 
-    <ParagraphsRenderer
-      paragraphs={paragraphs}
-      activeParagraph={activeParagraph}
-      activeRow={activeRow}
-      activeElement={activeElement}
-      setActiveParagraph={setActiveParagraph}
-      setActiveRow={setActiveRow}
-      setActiveElement={setActiveElement}
-      setIsImageSelected={setIsImageSelected}
-      setActivePopup={setActivePopup}
-      handleTextResize={handleTextResize}
-      setImageSettings={setImageSettings}
-      setParagraphs={setParagraphs}
-    />
+        <ParagraphsRenderer
+          paragraphs={paragraphs}
+          activeParagraph={activeParagraph}
+          activeRow={activeRow}
+          activeElement={activeElement}
+          setActiveParagraph={setActiveParagraph}
+          setActiveRow={setActiveRow}
+          setActiveElement={setActiveElement}
+          setIsImageSelected={setIsImageSelected}
+          setActivePopup={setActivePopup}
+          handleTextResize={handleTextResize}
+          setImageSettings={setImageSettings}
+          setParagraphs={setParagraphs}
+        />
 
-{/* <input
+        {/* <input
 type="file"
 ref={fileInputRef}
 style={{ display: "none" }}
 accept="image/*"
 onChange={handleImageUpload}
 />; */}
-    <input
-      type="file" 
-      onChange={fileChange3}
-      // value={imgUrl2? ` ${apiUrl}/${imgUrl2}`:''}
-      ref={fileInputRef}
-      style={{ display: "none" }}
-      accept="image/*"
-      // onChange={handleImageUpload}
-    />
-
-<>
-<hr/>
-
-<Modal
-          fullscreen={fullscreenB}
-          show={showB}
-          dialogClassName="modal-90w"
-          aria-labelledby="example-custom-modal-styling-title"
-          onHide={() => setShowB(false)}
-        >
-          <Modal.Header closeButton></Modal.Header>
-          <Modal.Body>
-      <div className='row ' style={{height:'auto',border:"1px solid", width:'90%', margin:'0 auto' }}>
-      <div  className="content-wrapper" ref={contentRef}  >
-        
-        <ParagraphsRenderer
-          paragraphs={paragraphs}
-          activeParagraph={null}
-          activeRow={null}
-          activeElement={null}
-          setActiveParagraph={() => {}}
-          setActiveRow={() => {}}
-          setActiveElement={() => {}}
-          setIsImageSelected={() => {}}
-          setActivePopup={() => {}}
-          handleTextResize={() => {}}
-          setImageSettings={() => {}}
-          setParagraphs={() => {}}
-          isViewMode={true}
+        <input
+          type="file"
+          onChange={fileChange3}
+          // value={imgUrl2? ` ${apiUrl}/${imgUrl2}`:''}
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          accept="image/*"
+          // onChange={handleImageUpload}
         />
-      </div>
-         </div>
-         </Modal.Body>
-         </Modal> 
-</>
 
-  </div>
-   </EdiContext.Provider>
- 
+        <>
+          <hr />
+
+          <Modal
+            fullscreen={fullscreenB}
+            show={showB}
+            dialogClassName="modal-90w"
+            aria-labelledby="example-custom-modal-styling-title"
+            onHide={() => setShowB(false)}
+          >
+            <Modal.Header closeButton></Modal.Header>
+            <Modal.Body>
+              <div
+                className="row "
+                style={{
+                  height: "auto",
+                  border: "1px solid",
+                  width: "90%",
+                  margin: "0 auto",
+                }}
+              >
+                <div className="content-wrapper" ref={contentRef}>
+                  <ParagraphsRenderer
+                    paragraphs={paragraphs}
+                    activeParagraph={null}
+                    activeRow={null}
+                    activeElement={null}
+                    setActiveParagraph={() => {}}
+                    setActiveRow={() => {}}
+                    setActiveElement={() => {}}
+                    setIsImageSelected={() => {}}
+                    setActivePopup={() => {}}
+                    handleTextResize={() => {}}
+                    setImageSettings={() => {}}
+                    setParagraphs={() => {}}
+                    isViewMode={true}
+                  />
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
+        </>
+      </div>
+    </EdiContext.Provider>
   );
 };
 

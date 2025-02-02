@@ -1,118 +1,143 @@
-import { useContext, useState } from 'react';
-import { ResizableBox } from 'react-resizable';
-import 'react-resizable/css/styles.css';
-import { useDropzone } from 'react-dropzone';
-import ChangeUplode from './ChangeUplode'; // Import the ChangeUplode function
-import { CmsContext, EdiContext } from '../context/CmsContext';
-import ChangeUplodeB from './ChangeUplodeB';
-import apiUrl from './ApiConfig';
+import { useContext, useState } from "react";
+import { ResizableBox } from "react-resizable";
+import "react-resizable/css/styles.css";
+import { useDropzone } from "react-dropzone";
+import ChangeUplodeB from "./ChangeUplodeB";
+import { CmsContext, EdiContext } from "../context/CmsContext";
+import apiUrl from "./ApiConfig";
 
-const ImageResizer = ({handleImageUpload,}) => {
-  let { setIsolaEdiImg } = useContext(CmsContext);
-  // let { setIsolaFlag } = useContext(EdiContext);
+const ImageResizer = ({ handleImageUpload }) => {
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const [imageId, setImageId] = useState(null); // Store the uploaded image ID
+  const [imageId, setImageId] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 300, height: 300 });
+  const [localAltText, setLocalAltText] = useState(""); // استیت برای ذخیره alt text
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    const url = URL.createObjectURL(file);
-    setImage(file);
-    setImageUrl(url);
+    const validExtensions = ["png", "jpg", "jpeg", "webp"];
 
-    // Upload the original image
+    if (!validExtensions.includes(file.name.split(".").pop().toLowerCase())) {
+      console.error("Invalid file extension");
+      return;
+    }
+
+    setImage(file);
+    setImageUrl(URL.createObjectURL(file));
     ChangeUplodeB(file, handleUploadSuccess, handleUploadError);
   };
 
   const handleUploadSuccess = (id) => {
     setImageId(id);
-    console.log('Image uploaded successfully with ID:', id);
   };
 
   const handleUploadError = () => {
-    console.log('Image upload failed');
+    console.log("Image upload failed");
   };
 
- 
-
   const handleSave = () => {
-    if (image) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      img.src = imageUrl; // آدرس اولیه تصویر
+    console.log("Saving image with altText:", localAltText); // بررسی مقدار altText قبل از ارسال
   
+    if (image) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.src = imageUrl;
       img.onload = () => {
-        // تنظیم ابعاد canvas به اندازه‌های جدید
         canvas.width = dimensions.width;
         canvas.height = dimensions.height;
-  
-        // رندر تصویر با ابعاد جدید روی canvas
         ctx.drawImage(img, 0, 0, dimensions.width, dimensions.height);
   
-        // تبدیل تصویر ریسایز شده به Blob
         canvas.toBlob(
           (blob) => {
             if (blob) {
-              // ساخت URL از Blob برای استفاده به عنوان src
-              const resizedImageSrc = URL.createObjectURL(blob);
-              console.log('Final Resized Image src:', resizedImageSrc);
+              const resizedFile = new File([blob], "resized-image.png", {
+                type: "image/png",
+              });
   
-              // تبدیل Blob به File برای آپلود
-              const resizedFile = new File([blob], 'resized-image.png', { type: 'image/png' });
-  
-              // آپلود تصویر ریسایز شده با ChangeUplode
               ChangeUplodeB(
                 resizedFile,
                 (id) => {
-                  console.log('Resized image uploaded successfully with ID:', id);
-                  // setIsolaEdiImg()
-                  handleImageUpload(`${apiUrl}/${id}`)
+                  console.log("Image uploaded, calling handleImageUpload...");
+                  handleImageUpload(`${apiUrl}/${id}`, localAltText); // ارسال altText
                 },
                 (error) => {
-                  console.error('Failed to upload resized image:', error);
+                  console.error("Failed to upload resized image:", error);
                 }
               );
             }
           },
-          'image/png' // نوع فایل خروجی
+          "image/png"
         );
       };
     }
-    // setIsolaFlag(prev=>!prev)
   };
-  
   
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*',
+    accept: ["image/png", "image/jpeg", "image/jpg", "image/webp"],
     onDrop,
   });
 
   return (
     <div>
-      <div {...getRootProps()} style={{ border: '2px dashed gray', padding: '20px', textAlign: 'center' }}>
+      <div
+        {...getRootProps()}
+        style={{
+          border: "2px dashed gray",
+          padding: "20px",
+          textAlign: "center",
+        }}
+      >
         <input {...getInputProps()} />
-        <p>عکس را انتخاب کنید یا یه اینجا بکشید</p>
+        <p>عکس را انتخاب کنید یا به اینجا بکشید</p>
       </div>
 
       {imageUrl && (
-        <div style={{ marginTop: '20px' }}>
+        <div style={{ marginTop: "20px" }}>
           <ResizableBox
             width={dimensions.width}
             height={dimensions.height}
             minConstraints={[100, 100]}
             maxConstraints={[600, 600]}
-            onResizeStop={(e, data) => setDimensions({ width: data.size.width, height: data.size.height })}
+            onResizeStop={(e, data) =>
+              setDimensions({
+                width: data.size.width,
+                height: data.size.height,
+              })
+            }
           >
-            <img src={imageUrl} alt="Selected" style={{ width: '100%', height: '100%' }} />
+            <img
+              src={imageUrl}
+              alt={localAltText} // استفاده از alt
+              style={{ width: "100%", height: "100%" }}
+            />
           </ResizableBox>
-          <div>
-            <button onClick={handleSave} style={{ marginTop: '10px' }}>
-              ذخیره عکس
-            </button>
-          </div>
+
+          {/* Input برای alt text */}
+          <input
+            type="text"
+            value={localAltText}
+            onChange={(e) => setLocalAltText(e.target.value)}
+            placeholder="متن جایگزین برای تصویر"
+            style={{
+              display: "block",
+              marginTop: "10px",
+              width: "100%",
+              padding: "5px",
+            }}
+          />
+
+          <button
+            onClick={handleSave}
+            style={{
+              marginTop: "10px",
+              outline: "none",
+              border: "1px dotted",
+            }}
+          >
+            ذخیره عکس
+          </button>
         </div>
       )}
     </div>

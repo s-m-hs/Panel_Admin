@@ -1,152 +1,5 @@
-// import React, { useRef, useEffect } from 'react';
-// import ReactQuill, { Quill } from 'react-quill';
-// import 'react-quill/dist/quill.snow.css';
 
-// // Import necessary Quill modules
-// const BlockEmbed = Quill.import('blots/block/embed');
-
-// // Blot for resizable HTML
-// class ResizableHTMLBlot extends BlockEmbed {
-//   static create(value) {
-//     const node = super.create();
-//     node.innerHTML = value.html || ''; // Insert the HTML content
-//     node.setAttribute('contenteditable', false);
-//     node.style.position = 'relative';
-//     node.style.display = 'inline-block';
-//     node.style.width = value.width || '300px';
-//     node.style.height = value.height || '150px';
-//     node.style.border = '1px solid #ccc';
-
-//     // Add a resize handle
-//     const resizeHandle = document.createElement('div');
-//     resizeHandle.style.position = 'absolute';
-//     resizeHandle.style.right = '0';
-//     resizeHandle.style.bottom = '0';
-//     resizeHandle.style.width = '10px';
-//     resizeHandle.style.height = '10px';
-//     resizeHandle.style.backgroundColor = '#000';
-//     resizeHandle.style.cursor = 'nwse-resize';
-
-//     resizeHandle.addEventListener('mousedown', (e) => {
-//       e.preventDefault();
-//       const startX = e.clientX;
-//       const startY = e.clientY;
-//       const startWidth = parseInt(window.getComputedStyle(node).width, 10);
-//       const startHeight = parseInt(window.getComputedStyle(node).height, 10);
-
-//       const onMouseMove = (event) => {
-//         const newWidth = startWidth + (event.clientX - startX);
-//         const newHeight = startHeight + (event.clientY - startY);
-//         node.style.width = `${newWidth}px`;
-//         node.style.height = `${newHeight}px`;
-//       };
-
-//       const onMouseUp = () => {
-//         document.removeEventListener('mousemove', onMouseMove);
-//         document.removeEventListener('mouseup', onMouseUp);
-//       };
-
-//       document.addEventListener('mousemove', onMouseMove);
-//       document.addEventListener('mouseup', onMouseUp);
-//     });
-
-//     node.appendChild(resizeHandle);
-//     return node;
-//   }
-
-//   static value(node) {
-//     return {
-//       html: node.innerHTML,
-//       width: node.style.width,
-//       height: node.style.height,
-//     };
-//   }
-// }
-
-// ResizableHTMLBlot.blotName = 'resizableHTML';
-// ResizableHTMLBlot.tagName = 'div';
-// Quill.register(ResizableHTMLBlot);
-
-// const TextEditor = ({ value, onChange }) => {
-//   const editorRef = useRef(null);
-
-//   // Toolbar and modules
-//   const modules = {
-//     toolbar: [
-//       [{ header: [1, 2, 3, false] }],
-//       ['bold', 'italic', 'underline', 'strike'],
-//       ['blockquote', 'code-block'],
-//       [{ list: 'ordered' }, { list: 'bullet' }],
-//       ['link', 'image'],
-//       ['clean'], // Remove formatting button
-//       [{ color: [] }, { background: [] }],
-//       ['iframe'],
-//     ],
-//     clipboard: {
-//       matchVisual: false,
-//     },
-//   };
-
-//   const formats = [
-//     'header',
-//     'bold',
-//     'italic',
-//     'underline',
-//     'strike',
-//     'blockquote',
-//     'code-block',
-//     'list',
-//     'bullet',
-//     'link',
-//     'image',
-//     'resizableHTML',
-//   ];
-
-//   // Handle inserting iframe
-//   const handleInsertHTML = () => {
-//     const html = prompt('Enter your HTML code (e.g., <iframe>):');
-//     if (html && editorRef.current) {
-//       const quill = editorRef.current.getEditor();
-//       const range = quill.getSelection(true);
-//       quill.insertEmbed(range.index, 'resizableHTML', {
-//         html,
-//         width: '300px',
-//         height: '150px',
-//       });
-//       quill.setSelection(range.index + 1, Quill.sources.SILENT);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <button onClick={handleInsertHTML} style={{ marginBottom: '10px' }}>
-//         Insert HTML (iframe)
-//       </button>
-//       <ReactQuill
-//         ref={editorRef}
-//         theme="snow"
-//         value={value}
-//         onChange={onChange}
-//         modules={modules}
-//         formats={formats}
-//         style={{ height: '400px' }}
-//       />
-//     </div>
-//   );
-// };
-
-// export default TextEditor;
-
-
-
-
-
-
-
-
-
-
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import ReactQuill, { Quill } from 'react-quill';
 import ImageResize from 'quill-image-resize';
 import 'react-quill/dist/quill.snow.css';
@@ -154,12 +7,6 @@ import './fontcss.css';
 import apiUrl from '../../utils/ApiConfig';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CustomToolbar from './CustomToolbar';
-
-
-
-
-
-
 
 // Import necessary Quill modules
 const BlockEmbed = Quill.import('blots/block/embed');
@@ -242,6 +89,7 @@ class CustomImageBlot extends ImageBlot {
       if (value.style) node.setAttribute('style', value.style);
       if (value.align) node.setAttribute('align', value.align);
       if (value.width) node.setAttribute('width', value.width);
+      if (value.alt) node.setAttribute('alt', value.alt);
     }
     return node;
   }
@@ -252,6 +100,7 @@ class CustomImageBlot extends ImageBlot {
       style: node.getAttribute('style') || '',
       align: node.getAttribute('align') || '',
       width: node.getAttribute('width') || '',
+      alt: node.getAttribute('alt') || '',
     };
   }
 }
@@ -293,6 +142,10 @@ Quill.register(CustomHTMLBlot);
 
 const TextEditor = ({ value, onChange, isDark,height,image, }) => {
   const editorRef = useRef(null);
+  const [altText,setAltText]=useState('')
+  const changAlttext=(e)=>{
+    setAltText(e.target.value)
+  }
   const formats = [
     'header',
     'bold',
@@ -315,23 +168,7 @@ const TextEditor = ({ value, onChange, isDark,height,image, }) => {
       matchVisual: false,
     },
   };
-  // const handleInsertHTML = () => {  
-  //   const html = prompt("Enter your HTML code:");  
-  //   if (html && editorRef.current) {  
-  //     const quill = editorRef.current.getEditor();  
-  //     // چک کنید که آیا html حداقل برای iframe نباشد  
-  //     if (html.includes("<iframe")) {  
-  //       const range = quill.getSelection(true);  
-  //       // درج HTML  
-  //       quill.clipboard.dangerouslyPasteHTML(range.index, html, Quill.sources.USER);  
-  //       quill.setSelection(range.index + html.length, Quill.sources.SILENT);  
-  //     } else {  
-  //       alert("Only iframe tags are allowed.");  
-  //     }  
-  //   }  
-  // };
 
-  
   const handleInsertHTML = () => {
     const html = prompt('Enter your HTML code (e.g., <iframe>):');
     if (html && editorRef.current) {
@@ -367,18 +204,23 @@ const TextEditor = ({ value, onChange, isDark,height,image, }) => {
       if (range) {
         quill.insertEmbed(range.index, 'customImage', {
           src: imageUrl,
+          alt:altText,
           style: 'display: inline; margin: 0px 0px 1em 1em; float: revert-layer;',
           width: '311',
         });
-        quill.setSelection(range.index + 1);
+        quill.setSelection(range.index + 1)
+        setAltText('')
       } else {
         const length = quill.getLength();
         quill.insertEmbed(length, 'customImage', {
           src: imageUrl,
+          alt:altText,
           style: 'display: inline; margin: 0px 0px 1em 1em; float: revert-layer;',
           width: '311',
         });
-        quill.setSelection(length + 1);
+        quill.setSelection(length + 1)
+        setAltText('')
+
       }
     }
   };
@@ -403,6 +245,11 @@ const TextEditor = ({ value, onChange, isDark,height,image, }) => {
           onChange={fileUploadHandler}
           accept="image/*"
         />
+        <input type="text"
+        className="textEditor-alttext-input"
+        placeholder='alt text'
+        onChange={changAlttext}
+        value={altText} />
         </> :
         ''
         }
