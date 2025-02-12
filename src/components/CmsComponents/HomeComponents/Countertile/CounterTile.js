@@ -6,6 +6,8 @@ export default function CounterTile() {
 
   const tileArray = Array.from({ length: 7 })
 
+  
+
   return (
 
     <>

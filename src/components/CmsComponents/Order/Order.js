@@ -10,28 +10,27 @@ import Pagination from "@mui/material/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import apiUrl from "../../../utils/ApiConfig";
-import { Sidebar } from 'primereact/sidebar';
-import { Toast } from 'primereact/toast';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Sidebar } from "primereact/sidebar";
+import { Toast } from "primereact/toast";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import ChangeUplode from "../../../utils/ChangeUplode";
 import DownloadFile from "../../../utils/DownloadFile";
-import ApiPostX2 from '../../../utils/ApiServicesX/ApiPostX2'
+import ApiPostX2 from "../../../utils/ApiServicesX/ApiPostX2";
 import ApiPostX3 from "../../../utils/ApiServicesX/ApiPostX3";
 import ApiPuX2 from "../../../utils/ApiServicesX/ApiPutX2";
 import ApiPutX3 from "../../../utils/ApiServicesX/ApiPutX3";
 import ApiPostX4 from "../../../utils/ApiServicesX/ApiPostX4";
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import SendIcon from "@mui/icons-material/Send";
 import mode from "../../../utils/ModsB";
-import Modal from 'react-bootstrap/Modal';
-
+import Modal from "react-bootstrap/Modal";
 
 export default function Order() {
-  const [stateId, setStateId] = useState(()=>{
-    if(mode.mode1){
-      return 1
-    }else if(mode.mode2){
-      return 2
+  const [stateId, setStateId] = useState(() => {
+    if (mode.mode1) {
+      return 1;
+    } else if (mode.mode2) {
+      return 2;
     }
   });
   const [orderId, setOrderID] = useState("");
@@ -41,7 +40,7 @@ export default function Order() {
   const [resultArrayFlag, setResultArrayFlag] = useState(false);
   const [textArea, setTextArea] = useState("");
   const [messageArray, setMessageArray] = useState([]);
-  const messageArrayRevers = messageArray.slice().reverse()
+  const messageArrayRevers = messageArray.slice().reverse();
   const [flag, setFlag] = useState(false);
   const [paginationArray, setPaginationArray] = useState([]);
   const [userId, setUserId] = useState("");
@@ -53,29 +52,29 @@ export default function Order() {
   const [guId, setGuId] = useState("");
   const [guIdB, setGuIdB] = useState("");
   const [file, setFile] = useState({});
-  const [flagButton,setFlagButton]=useState(false)
+  const [flagButton, setFlagButton] = useState(false);
   const [visible, setVisible] = useState(false);
-const [inputValues, setInputValues] = useState({});
-const [inputValuesB, setInputValuesB] = useState({});
-  const pageCount=30
+  const [inputValues, setInputValues] = useState({});
+  const [inputValuesB, setInputValuesB] = useState({});
+  const pageCount = 30;
   const [allCount, setAllCount] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);  
-  const homeContext=useContext(HomeContext)
+  const [isChecked, setIsChecked] = useState(false);
+const [userAddress,setUserAddress]=useState('')
+  const homeContext = useContext(HomeContext);
   const headerAuth = `Bearer ${cmsContext.token.token}`;
   ///for SaneComputer==>
   const [showB, setShowB] = useState(false);
   const handleCloseB = () => setShowB(false);
-/////////
-console.log(ordeDetail)
-const [profile,setProfile]=useState({})
+  /////////
+  const [profile, setProfile] = useState({});
   const handleChange = (event, value) => {
     setPage(value);
     getBGetOrdersByStatus(value - 1, pageCount);
   };
   useEffect(() => {
-    if (statearray.length != 0 ) {
+    if (statearray.length != 0) {
       let x = allCount;
-      let countInPage = pageCount; 
+      let countInPage = pageCount;
       let z = Math.ceil(x / countInPage);
       z
         ? setPaginationArray(Array.from({ length: z }))
@@ -99,21 +98,20 @@ const [profile,setProfile]=useState({})
   const handleError = (errors) => {};
 
   const notify = () => {
-
     // toast.success(`${title}`);
-    setFile({})
-    setGuId('')
+    setFile({});
+    setGuId("");
     setFlag((prev) => !prev);
     setTextArea("");
   };
   // const  notifyB = (title) => {
   //   toast.success(`${title}`);
-  
+
   // };
   const toastB = useRef(null);
 
-  const show = (stat,title) => {
-      toastB.current.show({ severity: stat, summary:stat, detail: title});
+  const show = (stat, title) => {
+    toastB.current.show({ severity: stat, summary: stat, detail: title });
   };
   ////////////////////////////
   const stateArraySelect = [
@@ -130,87 +128,87 @@ const [profile,setProfile]=useState({})
     setTextArea(e.target.value);
   };
 
-  const changeSMSbox=(e)=>{
+  const changeSMSbox = (e) => {
     setIsChecked(e.target.checked);
-  }
+  };
   // console.log(SMScheck)
- 
+
   ///////////////////////////
   const fileChange = (e) => {
     setFile(e.target.files[0]);
   };
-////////////////////////
-const resetBasketTable=()=>{
-  setFlagButton(false)
-  setTotalPrice(0)
-  reset(setValue(""));}
-
+  ////////////////////////
+  const resetBasketTable = () => {
+    setFlagButton(false);
+    setTotalPrice(0);
+    reset(setValue(""));
+  };
 
   ///for SaneComputer ==>
-  const getprofile=(id)=>{
-    async function myApp(){
-      const res=await fetch(`${apiUrl}/api/CyUsers/${id}`,{
-        method:'GET',
+  const getprofile = (id) => {
+    async function myApp() {
+      const res = await fetch(`${apiUrl}/api/CyUsers/${id}`, {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${cmsContext.token.token}`,
           "Content-Type": "application/json",
+        },
+      }).then((res) => {
+        if (res.ok) {
+          return res.json().then((result) => {
+            setProfile(result);
+            setShowB(true);
+          });
         }
-      }).then(res=>{
-        if(res.ok){
-          return res.json().then(result=>{
-            console.log(result)
-
-            setProfile(result)
-            setShowB(true)
-          })
-        }
-      })
+      });
     }
-    myApp()
-  }
-////////////////////
-const sendSMS=()=>{
-  async function myApp(){
-    const res= await fetch(`${apiUrl}/api/CyOrderMessage/sendSms?OrderId=${orderId}`,{
-      method:'POST',
-      headers: {
-        Authorization: headerAuth,
-        "Content-Type": "application/json",
-      },
-    })
-    
-    .catch(err=>console.log(err))
-  }
-  myApp()}
+    myApp();
+  };
+  ////////////////////
+  const sendSMS = () => {
+    async function myApp() {
+      const res = await fetch(
+        `${apiUrl}/api/CyOrderMessage/sendSms?OrderId=${orderId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: headerAuth,
+            "Content-Type": "application/json",
+          },
+        }
+      ).catch((err) => console.log(err));
+    }
+    myApp();
+  };
 
   /////////////////////////
-  const funcC=()=>{
-    if(isChecked){
+  const funcC = () => {
+    if (isChecked) {
       // sendSMS()
-      show("info",' پیام با موفقیت ارسال شد')
-      notify()
-    
-      classRefC.current.classList.add("order-hide")
-    }else{
-      show("info",' پیام با موفقیت ارسال شد')
-      notify()
-    
-      classRefC.current.classList.add("order-hide")
+      show("info", " پیام با موفقیت ارسال شد");
+      notify();
+
+      classRefC.current.classList.add("order-hide");
+    } else {
+      show("info", " پیام با موفقیت ارسال شد");
+      notify();
+
+      classRefC.current.classList.add("order-hide");
     }
-  }
+  };
   const sendHandler = () => {
     let obj = {
       id: 0,
       senderID: 0,
       orderID: orderId,
-      description: textArea ? textArea : guId? 'ارسال فایل':'' ,
+      description: textArea ? textArea : guId ? "ارسال فایل" : "",
       status: 1,
       sentDate: "2024-07-17T19:41:14.487Z",
       seenDate: "2024-07-17T19:41:14.487Z",
       fileID: guId ? guId : null,
     };
     // console.log(obj);
-    // ApiPostX2('/api/CyOrderMessage/SendMessageAdmin',headerAuth,obj,funcC) 
+    // ApiPostX2('/api/CyOrderMessage/SendMessageAdmin',headerAuth,obj,funcC)
     async function myapp() {
       const res = await fetch(`${apiUrl}/api/CyOrderMessage/SendMessageAdmin`, {
         method: "POST",
@@ -222,119 +220,121 @@ const sendSMS=()=>{
       })
         .then((res) => {
           if (res.status == 200) {
-if(isChecked){
-  sendSMS()
-  show("info",' پیام با موفقیت ارسال شد')
-  notify();
+            if (isChecked) {
+              sendSMS();
+              show("info", " پیام با موفقیت ارسال شد");
+              notify();
 
-  classRefC.current.classList.add("order-hide");
-  return res.json();
-}else{
-  show("info",' پیام با موفقیت ارسال شد')
-  notify();
+              classRefC.current.classList.add("order-hide");
+              return res.json();
+            } else {
+              show("info", " پیام با موفقیت ارسال شد");
+              notify();
 
-  classRefC.current.classList.add("order-hide");
-  return res.json();
-}
-
+              classRefC.current.classList.add("order-hide");
+              return res.json();
+            }
           }
         })
         .then((result) => {
-          setFile({})
-
+          setFile({});
         });
     }
-    myapp()
-
+    myapp();
   };
 
-  
   const getMessageHandler = () => {
-ApiPostX3('/api/CyOrderMessage/GetMessagesByOrderIDAdmin?OrderID=',headerAuth,orderId,setMessageArray)
-
+    ApiPostX3(
+      "/api/CyOrderMessage/GetMessagesByOrderIDAdmin?OrderID=",
+      headerAuth,
+      orderId,
+      setMessageArray
+    );
   };
 
-  {/* //////////////////section 2 =>>*/}
+  {
+    /* //////////////////section 2 =>>*/
+  }
 
   const seeOrderDetail = (id, quantity) => {
-  setOrdeDetail([])
-    reset(setValue(""))
-    ApiPostX3('/api/CyOrders/GetOrderDetailsAdmin?OrderId=',headerAuth,id,setOrdeDetail)
-
-
+    setOrdeDetail([]);
+    reset(setValue(""));
+    ApiPostX3(
+      "/api/CyOrders/GetOrderDetailsAdmin?OrderId=",
+      headerAuth,
+      id,
+      setOrdeDetail
+    );
   };
   const handleInputChange = (id, value) => {
     setInputValues((prev) => ({ ...prev, [id]: value }));
   };
-  
 
-  const funcD=()=>{
-    show("info",'وضعیت جدید ثت شد')
+  const funcD = () => {
+    show("info", "وضعیت جدید ثت شد");
+  };
+  const changeStatusText = (id, e) => {
+    e.preventDefault();
 
-  }
-  const changeStatusText = (id,e) => {
-    e.preventDefault()
-
-    const statusText = inputValues[id] || ''; // دریافت مقدار ورودی
+    const statusText = inputValues[id] || ""; // دریافت مقدار ورودی
     const obj = { itemID: id, statusText };
     // console.log(obj); // چاپ شیء
-   
-   ApiPuX2('/api/CyOrders/updateItemStatus',headerAuth,obj,funcD)
 
+    ApiPuX2("/api/CyOrders/updateItemStatus", headerAuth, obj, funcD);
   };
-
 
   const handleInputChangeB = (id, value) => {
     setInputValuesB((prev) => ({ ...prev, [id]: value }));
   };
-  
-  const funcG=()=>{
-    show("success",'توضیحات جدید ثبت شد')
 
-  }
-  const changeStatusTextB = (id,e) => {
-    e.preventDefault()
+  const funcG = () => {
+    show("success", "توضیحات جدید ثبت شد");
+  };
+  const changeStatusTextB = (id, e) => {
+    e.preventDefault();
 
-    const statusText = inputValuesB[id] || ''; // دریافت مقدار ورودی
+    const statusText = inputValuesB[id] || ""; // دریافت مقدار ورودی
     const obj = { itemID: id, statusText };
 
     // console.log(obj); // چاپ شیء
-  
-    ApiPuX2('/api/CyOrders/updateItemInfo',headerAuth,obj,funcG)
+
+    ApiPuX2("/api/CyOrders/updateItemInfo", headerAuth, obj, funcG);
   };
 
-
-    {/* //////////////////section 2 ^^^^^*/}
+  {
+    /* //////////////////section 2 ^^^^^*/
+  }
 
   /////////////////////////////
   const [totalPrice, setTotalPrice] = useState(0);
   const calculateTotalPrice = (itemList) => {
     // Check for any item with unitPrice == 0
-    const hasZeroUnitPrice = itemList.some(item => (item.unitPrice === 0 || !item.duration )&& item.status===1 );
-    
+    const hasZeroUnitPrice = itemList.some(
+      (item) => (item.unitPrice === 0 || !item.duration) && item.status === 1
+    );
+
     // Trigger SweetAlert if there is an item with unitPrice == 0
     if (hasZeroUnitPrice) {
-       setVisible(false)
-        Swal.fire({
-            icon: 'warning',
-            text: '...فیلدهای محصول به درستی پرنشده است ',
-            confirmButtonText:'باشه'
-        }).then(res=>{
-          setVisible(true)
+      setVisible(false);
+      Swal.fire({
+        icon: "warning",
+        text: "...فیلدهای محصول به درستی پرنشده است ",
+        confirmButtonText: "باشه",
+      }).then((res) => {
+        setVisible(true);
 
-          setFlagButton(false)
-        });
+        setFlagButton(false);
+      });
     }
 
     // Calculate the total price for items with status == 1
     const total = itemList
-        .filter(item => item.status === 1)
-        .reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
-    
+      .filter((item) => item.status === 1)
+      .reduce((acc, item) => acc + item.quantity * item.unitPrice, 0);
+
     setTotalPrice(total);
     setFlagButton(true); // Assuming you want to set this to true after calculation
-};
-
+  };
 
   const handleRegistration = (data) => {
     // setResultArray([])
@@ -342,7 +342,6 @@ ApiPostX3('/api/CyOrderMessage/GetMessagesByOrderIDAdmin?OrderID=',headerAuth,or
 
     // Iterate over the keys of the object
     Object.keys(data).forEach((key) => {
-
       // Check if the key is related to quantity (starts with 'quantity')
       if (key.startsWith("quantity")) {
         // Extract the ID from the key
@@ -361,7 +360,7 @@ ApiPostX3('/api/CyOrderMessage/GetMessagesByOrderIDAdmin?OrderID=',headerAuth,or
             quantity: Number(data[key]),
             unitPrice: Number(data[unitPriceKey]),
             status: Number(data[statusKey]),
-            duration: (data[durationKey]),
+            duration: data[durationKey],
           });
         }
       }
@@ -369,17 +368,14 @@ ApiPostX3('/api/CyOrderMessage/GetMessagesByOrderIDAdmin?OrderID=',headerAuth,or
     setResultArray(result);
   };
 
-useEffect(()=>{
-  if(resultArray?.length!==0 && !flagButton){
-    calculateTotalPrice(resultArray)
-  }else if(flagButton){
-        setResultArrayFlag((prev) => !prev);
-        setTotalPrice(0)
-
-  }
-
-},[resultArray])
-
+  useEffect(() => {
+    if (resultArray?.length !== 0 && !flagButton) {
+      calculateTotalPrice(resultArray);
+    } else if (flagButton) {
+      setResultArrayFlag((prev) => !prev);
+      setTotalPrice(0);
+    }
+  }, [resultArray]);
 
   async function myAppPost() {
     const res = await fetch(
@@ -392,31 +388,27 @@ useEffect(()=>{
         },
         body: JSON.stringify(resultArray),
       }
-    ).then((res) => { 
-      if(res.status==200){
-          setResultArray([]);
-      setOrdeDetail([]);
-          reset(setValue(""));
-          setVisible(false)
-
-      } 
-    
- 
+    ).then((res) => {
+      if (res.status == 200) {
+        setResultArray([]);
+        setOrdeDetail([]);
+        reset(setValue(""));
+        setVisible(false);
+      }
     });
   }
-const funcF=()=>{
-  setResultArray([]);
-  setOrdeDetail([]);
-      reset(setValue(""));
-}
+  const funcF = () => {
+    setResultArray([]);
+    setOrdeDetail([]);
+    reset(setValue(""));
+  };
   async function myAppPostB() {
-    let id=`${orderId}&status=4`
-ApiPutX3('/api/CyOrders/sendToInProccess?orderId=',headerAuth,id,funcF)
-
+    let id = `${orderId}&status=4`;
+    ApiPutX3("/api/CyOrders/sendToInProccess?orderId=", headerAuth, id, funcF);
   }
   async function myAppPostC() {
-    let id=`${orderId}&status=5`
-    ApiPutX3('/api/CyOrders/sendToInProccess?orderId=',headerAuth,id,funcF)
+    let id = `${orderId}&status=5`;
+    ApiPutX3("/api/CyOrders/sendToInProccess?orderId=", headerAuth, id, funcF);
   }
 
   ///////////////////////////////
@@ -431,47 +423,47 @@ ApiPutX3('/api/CyOrders/sendToInProccess?orderId=',headerAuth,id,funcF)
       }).then((res) => {
         myAppPost();
         window.scrollTo(0, 0);
-        setFlagButton(false)
-        
+        setFlagButton(false);
       });
     }
-
   }, [resultArrayFlag]);
 
-useEffect(()=>{
+  useEffect(() => {
+    if (stateId == 3 && ordeDetail.length != 0) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: " سفارش جهت پردازش ارسال گردید",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then((res) => {
+        myAppPostB();
+        window.scrollTo(0, 0);
+        setFlagButton(false);
+      });
+    } else if (stateId == 4 && ordeDetail.length != 0) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: " سفارش جهت تحویل ارسال گردید",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then((res) => {
+        myAppPostC();
+        window.scrollTo(0, 0);
+        setFlagButton(false);
+      });
+    }
+  }, [resultArray]);
 
- if (stateId==3 && ordeDetail.length != 0){
-    Swal.fire({
-      position: "center", 
-      icon: "success",
-      title: " سفارش جهت پردازش ارسال گردید",
-      showConfirmButton: false,
-      timer: 1500,
-    }).then((res) => {
-      myAppPostB();
-      window.scrollTo(0, 0);
-      setFlagButton(false)
-      
-    });
-  }
-  else if(stateId==4 && ordeDetail.length != 0){
-    Swal.fire({
-      position: "center", 
-      icon: "success",
-      title: " سفارش جهت تحویل ارسال گردید",
-      showConfirmButton: false,
-      timer: 1500,
-    }).then((res) => {
-      myAppPostC();
-      window.scrollTo(0, 0);
-      setFlagButton(false)
-      
-    });
-  }
-},[resultArray])
+  // console.log(ordeDetail);
+  // console.log(statearray.itemList[0].address);
+  // console.log(userAddress)
 
-console.log(ordeDetail)
-
+  const searchOrdersAddress = (id) => {
+    let filterOrder = statearray.itemList.filter((item) => item.id == id);
+    setUserAddress(filterOrder[0].address)
+  };
   ///////////////////////////////// {/* //////////////////section 1 */}
 
   const getBGetOrdersByStatus = (pageNumber, pageSize) => {
@@ -481,27 +473,32 @@ console.log(ordeDetail)
       pageSize: pageSize,
     };
 
-    ApiPostX4('/api/CyOrders/GetOrdersByStatusAdmin',headerAuth,obj,setStateArray,setAllCount)
-
+    ApiPostX4(
+      "/api/CyOrders/GetOrdersByStatusAdmin",
+      headerAuth,
+      obj,
+      setStateArray,
+      setAllCount
+    );
   };
   /////////////////////////////
-  const funcA=()=>{
+  const funcA = () => {
     classRefC.current.classList.remove("order-hide");
-  }
-  const funcB=(id)=>{
+  };
+  const funcB = (id) => {
     setGuId(id);
     classRefC.current.classList.remove("order-hide");
-  }
+  };
   useEffect(() => {
     if (file?.name) {
-      ChangeUplode(file,funcA,funcB)
+      ChangeUplode(file, funcA, funcB);
       // changeUplode();
     }
   }, [file]);
   //////////////////////////
   useEffect(() => {
     getBGetOrdersByStatus(0, pageCount);
-  }, [stateId, resultArray,inputValues]);
+  }, [stateId, resultArray, inputValues]);
 
   useEffect(() => {
     if (orderId) {
@@ -527,27 +524,21 @@ console.log(ordeDetail)
   return (
     <div className="container">
       <div className="card flex justify-content-center">
-            <Toast ref={toastB} />
-        </div>
-            <Sidebar visible={visible} onHide={() => setVisible(false)} fullScreen>
-             <div className="container order-modal-container">
-              <div className="row order-modal-row">
-
-              <div className="col-9 order-left-maindiv">
-          <div className="basket-table">
-            <form
-              action=""
-              onSubmit={handleSubmit(handleRegistration, handleError)}
-            >
-
-
-
-  {/* //////////////////section 2 */}
-              <>
-              
-                <DataTable title={`لیست سبد خرید : ${orderId}`}>
-             
-                  {/* {ordeDetail.length != 0 && (
+        <Toast ref={toastB} />
+      </div>
+      <Sidebar visible={visible} onHide={() => setVisible(false)} fullScreen>
+        <div className="container order-modal-container">
+          <div className="row order-modal-row">
+            <div className="col-9 order-left-maindiv">
+              <div className="basket-table">
+                <form
+                  action=""
+                  onSubmit={handleSubmit(handleRegistration, handleError)}
+                >
+                  {/* //////////////////section 2 */}
+                  <>
+                    <DataTable title={`لیست سبد خرید : ${orderId}`}>
+                      {/* {ordeDetail.length != 0 && (
                     <div className="basket-table-message-div">
                       <span
                         className="basket-table-message-span sphere "
@@ -564,421 +555,482 @@ console.log(ordeDetail)
                     </div>
                   )} */}
 
-                  {/* <table className="table table-striped"> */}
-                  <table className={!homeContext.themContext ? 'table table-striped   product-table':'table table-striped table-dark  product-table'}>
-                    <thead>
-                      <tr key="">
-                        <th>تصویر </th>
-                        {/* <th>شناسه سفارش</th> */}
-                        {/* <th>شناسه محصول</th> */}
-                        <th>شرکت سازنده </th>
-                        <th>سریال محصول  </th>
-                        <th> وضعیت</th>
-                        <th>زمان تامین   </th>
-                        <th>توضیحات    </th>
-                        <th>تعداد</th>
-                        <th>قیمت محصول</th>
-                        {stateId ==1 &&  <th>وضعیت</th>} 
-                      </tr>
-                    </thead>
-                    <tbody className={!flagButton ?'':"order_disble" } >
-                      {ordeDetail.length != 0 &&
-                        ordeDetail.map((item) => (
-                          <>
-                            <tr key={item.id}>
-                              <td  >{item.cyProductImgUrl ? <img src={item.cyProductImgUrl} alt="" /> :   <img src="../../../../images/40166.png" alt="" style={{width:'45px'}} />}
-                                
-                              </td>
-                            
-                              {/* <td className="basket-table__id">
+                      {/* <table className="table table-striped"> */}
+                      <table
+                        className={
+                          !homeContext.themContext
+                            ? "table table-striped   product-table"
+                            : "table table-striped table-dark  product-table"
+                        }
+                      >
+                        <thead>
+                          <tr key="">
+                            <th>تصویر </th>
+                            {/* <th>شناسه سفارش</th> */}
+                            {/* <th>شناسه محصول</th> */}
+                            <th>شرکت سازنده </th>
+                            <th>سریال محصول </th>
+                            <th> وضعیت</th>
+                            <th>زمان تامین </th>
+                            <th>توضیحات </th>
+                            <th>تعداد</th>
+                            <th>قیمت محصول</th>
+                            {stateId == 1 && <th>وضعیت</th>}
+                          </tr>
+                        </thead>
+                        <tbody className={!flagButton ? "" : "order_disble"}>
+                          {ordeDetail.length != 0 &&
+                            ordeDetail.map((item) => (
+                              <>
+                                <tr key={item.id}>
+                                  <td>
+                                    {item.cyProductImgUrl ? (
+                                      <img src={item.cyProductImgUrl} alt="" />
+                                    ) : (
+                                      <img
+                                        src="../../../../images/40166.png"
+                                        alt=""
+                                        style={{ width: "45px" }}
+                                      />
+                                    )}
+                                  </td>
+
+                                  {/* <td className="basket-table__id">
                                 {item.cyOrderID}
                               </td> */}
-                              
-                              <td >
-                                {item.manufacturer}
-                              </td>
 
-                              <td>{item.partNumber}</td>
+                                  <td>{item.manufacturer}</td>
 
-                              <td className="basket-table-statustext-td">   
-                                <div className="centerr">
-                                    <input 
-                                    type="text"
-placeholder={item.statusText}
-   onChange={(e) => handleInputChange(item.id, e.target.value)}                                    // value={statusTextOrder}
-                                    /> 
-                                    {/* <span  ref={classRefD} className="basket-table-statustext-span"  >{item.statusText}</span> */}
-                                    <button  className="btn btn-outline-secondary   "
-                                   
-                                      onClick={(e) => changeStatusText(item.id,e)}
+                                  <td>{item.partNumber}</td>
 
-                                    >
-                                    <i class="fa-solid fa-check fa-2xs"></i>                                 </button>
-                                </div>
-                               
-                                    </td>
+                                  <td className="basket-table-statustext-td">
+                                    <div className="centerr">
+                                      <input
+                                        type="text"
+                                        placeholder={item.statusText}
+                                        onChange={(e) =>
+                                          handleInputChange(
+                                            item.id,
+                                            e.target.value
+                                          )
+                                        } // value={statusTextOrder}
+                                      />
+                                      {/* <span  ref={classRefD} className="basket-table-statustext-span"  >{item.statusText}</span> */}
+                                      <button
+                                        className="btn btn-outline-secondary   "
+                                        onClick={(e) =>
+                                          changeStatusText(item.id, e)
+                                        }
+                                      >
+                                        <i class="fa-solid fa-check fa-2xs"></i>{" "}
+                                      </button>
+                                    </div>
+                                  </td>
 
-
-
-
-                              <td   className={stateId==1 ? "basket-table-quntity" :"basket-table-quntity order_disble "}  
-                              >
-                                  <input
+                                  <td
+                                    className={
+                                      stateId == 1
+                                        ? "basket-table-quntity"
+                                        : "basket-table-quntity order_disble "
+                                    }
+                                  >
+                                    <input
                                       type="text"
                                       name={`duration${item.id}`}
-                                      {...register(`duration${item.id}`)
-                                      
-              
-                                    }
-                                    placeholder={item.duration}
-                                    // value={item.duration}
+                                      {...register(`duration${item.id}`)}
+                                      placeholder={item.duration}
+                                      // value={item.duration}
                                     />
-                               {/* <span className="basket-table-data">روز</span> */}
-                              </td>
-
-                              <td className="basket-table-statustext-td">   
-                                <div className="centerr">
-                                    <input 
-                                    type="text"
-placeholder={item.information}
-   onChange={(e) => handleInputChangeB(item.id, e.target.value)}                                    // value={statusTextOrder}
-                                    /> 
-                                    {/* <span  ref={classRefD} className="basket-table-statustext-span"  >{item.statusText}</span> */}
-                                    <button  className="btn btn-outline-secondary   "
-                                   
-                                      onClick={(e) => changeStatusTextB(item.id,e)}
-
-                                    >
-                                    <i class="fa-solid fa-check fa-2xs"></i>                                 </button>
-                                </div>
-                               
-                                    </td>
-
-
-                              {stateId == 1 ? (
-                                <>
-                                  <td
-                                  className="basket-table-quntity"
-                                  >
-                                    <input
-                                      type="text"
-                                      name={`quantity${item.id}`}
-                                      {...register(`quantity${item.id}`, {
-                                        value: `${item.quantity}`,
-                                      })}
-                                    />
-                                  <span className="basket-table-data">عدد</span>
-
-                                    {/* <span>{item.cyQuantity}</span> */}
+                                    {/* <span className="basket-table-data">روز</span> */}
                                   </td>
 
-                                  <td style={{ textAlign: `center` }}
-                                   className="basket-table-price">
-                                    <input
-                                      type="text"
-                                      name={`unitPrice${item.id}`}
-                                      {...register(`unitPrice${item.id}`, {
-                                        // value: 100,
-                                        value:item.unitPrice ? `${item.unitPrice}` : 0,
-                                      })}
-                                    />{" "}
-                                     <span className="basket-table-data">دلار</span>
-                                     </td>
-
-                       
-
-
-
-                                  <td className="basket-table-radio">
-                                    <div className="basket-table-radio-div">
-                                      {" "}
-                                      <span>تایید</span>{" "}
+                                  <td className="basket-table-statustext-td">
+                                    <div className="centerr">
                                       <input
-                                        {...register(`status${item.id}`, {
-                                          value: "1",
-                                        })}
-                                        type="radio"
-                                        value="1"
+                                        type="text"
+                                        placeholder={item.information}
+                                        onChange={(e) =>
+                                          handleInputChangeB(
+                                            item.id,
+                                            e.target.value
+                                          )
+                                        } // value={statusTextOrder}
                                       />
+                                      {/* <span  ref={classRefD} className="basket-table-statustext-span"  >{item.statusText}</span> */}
+                                      <button
+                                        className="btn btn-outline-secondary   "
+                                        onClick={(e) =>
+                                          changeStatusTextB(item.id, e)
+                                        }
+                                      >
+                                        <i class="fa-solid fa-check fa-2xs"></i>{" "}
+                                      </button>
                                     </div>
-                                    <div className="basket-table-radio-div">
-                                      <span>لغو</span>{" "}
-                                      <input
-                                        {...register(`status${item.id}`)}
-                                        type="radio"
-                                        value="2"
-                                      />{" "}
-                                    </div>
-                                  </td>
-                                </>
-                              ) 
-                              : (
-                                <>
-                                  <td style={{ textAlign: "center" }}
-                                   className="basket-table-quntity">
-                                    <input
-                                      disabled
-                                      type="text"
-                                      name={`quantity${item.id}`}
-                                      {...register(`quantity${item.id}`, {
-                                        value: `${item.quantity}`,
-                                      })}
-                                    />
-                                  <span className="basket-table-data">عدد</span>
-
-                                    {/* <span>{item.cyQuantity}</span> */}
                                   </td>
 
+                                  {stateId == 1 ? (
+                                    <>
+                                      <td className="basket-table-quntity">
+                                        <input
+                                          type="text"
+                                          name={`quantity${item.id}`}
+                                          {...register(`quantity${item.id}`, {
+                                            value: `${item.quantity}`,
+                                          })}
+                                        />
+                                        <span className="basket-table-data">
+                                          عدد
+                                        </span>
 
-                                  <td style={{ textAlign: `center` }}
-                            className="basket-table-price"
+                                        {/* <span>{item.cyQuantity}</span> */}
+                                      </td>
 
-                                  >
-    {/* ////// for sane */}
+                                      <td
+                                        style={{ textAlign: `center` }}
+                                        className="basket-table-price"
+                                      >
+                                        <input
+                                          type="text"
+                                          name={`unitPrice${item.id}`}
+                                          {...register(`unitPrice${item.id}`, {
+                                            // value: 100,
+                                            value: item.unitPrice
+                                              ? `${item.unitPrice}`
+                                              : 0,
+                                          })}
+                                        />{" "}
+                                        <span className="basket-table-data">
+                                          دلار
+                                        </span>
+                                      </td>
 
-    {mode.mode2 &&  <>
-                                   <input
-                                      disabled
-                                      type="text"
-                                      name={`unitPrice${item.id}`}
-                                      {...register(`unitPrice${item.id}`, {
-                                        value:item.unitPrice ? `${(item.unitPrice/10).toLocaleString()} تومان` : 0,
-                                      })}
-                                    />{" "}
-                                     {/* <span className="basket-table-data">تومان</span> */}
-                                   </> 
-    }
+                                      <td className="basket-table-radio">
+                                        <div className="basket-table-radio-div">
+                                          {" "}
+                                          <span>تایید</span>{" "}
+                                          <input
+                                            {...register(`status${item.id}`, {
+                                              value: "1",
+                                            })}
+                                            type="radio"
+                                            value="1"
+                                          />
+                                        </div>
+                                        <div className="basket-table-radio-div">
+                                          <span>لغو</span>{" "}
+                                          <input
+                                            {...register(`status${item.id}`)}
+                                            type="radio"
+                                            value="2"
+                                          />{" "}
+                                        </div>
+                                      </td>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <td
+                                        style={{ textAlign: "center" }}
+                                        className="basket-table-quntity"
+                                      >
+                                        <input
+                                          disabled
+                                          type="text"
+                                          name={`quantity${item.id}`}
+                                          {...register(`quantity${item.id}`, {
+                                            value: `${item.quantity}`,
+                                          })}
+                                        />
+                                        <span className="basket-table-data">
+                                          عدد
+                                        </span>
 
+                                        {/* <span>{item.cyQuantity}</span> */}
+                                      </td>
 
+                                      <td
+                                        style={{ textAlign: `center` }}
+                                        className="basket-table-price"
+                                      >
+                                        {/* ////// for sane */}
 
+                                        {mode.mode2 && (
+                                          <>
+                                            <input
+                                              disabled
+                                              type="text"
+                                              name={`unitPrice${item.id}`}
+                                              {...register(
+                                                `unitPrice${item.id}`,
+                                                {
+                                                  value: item.unitPrice
+                                                    ? `${(
+                                                        item.unitPrice / 10
+                                                      ).toLocaleString()} تومان`
+                                                    : 0,
+                                                }
+                                              )}
+                                            />{" "}
+                                            {/* <span className="basket-table-data">تومان</span> */}
+                                          </>
+                                        )}
 
-                                   {item.status == 2 && <span>لغوشده</span>  }
-                                   {item.status == 1 &&  <>
-                                   <input
-                                      disabled
-                                      type="text"
-                                      name={`unitPrice${item.id}`}
-                                      {...register(`unitPrice${item.id}`, {
-                                        value:item.unitPrice ? `${item.unitPrice}` : 0,
-                                        // value: `${item.unitOfferPrice}`,
-                                      })}
-                                    />{" "}
-                                     <span className="basket-table-data">دلار</span>
-                                     <div>{item.unitPrice}</div>
-                                   </>  }
-                                  
-                                  
+                                        {item.status == 2 && (
+                                          <span>لغوشده</span>
+                                        )}
+                                        {item.status == 1 && (
+                                          <>
+                                            <input
+                                              disabled
+                                              type="text"
+                                              name={`unitPrice${item.id}`}
+                                              {...register(
+                                                `unitPrice${item.id}`,
+                                                {
+                                                  value: item.unitPrice
+                                                    ? `${item.unitPrice}`
+                                                    : 0,
+                                                  // value: `${item.unitOfferPrice}`,
+                                                }
+                                              )}
+                                            />{" "}
+                                            <span className="basket-table-data">
+                                              دلار
+                                            </span>
+                                            <div>{item.unitPrice}</div>
+                                          </>
+                                        )}
+                                      </td>
+                                    </>
+                                  )}
+                                </tr>
+                              </>
+                            ))}
+                        </tbody>
+                        <div></div>
+                      </table>
 
-                                  </td>
-                                </>
-                              )}
-                            </tr>
-                            
-                          </>
-                        ))}
+                      {ordeDetail.length != 0 && stateId == 1 && (
+                        <div style={{ width: "100%", textAlign: "center" }}>
+                          {flagButton && (
+                            <i
+                              class="fa-solid fa-arrow-rotate-left fa-2xl"
+                              onClick={resetBasketTable}
+                              style={{
+                                color: "#63E6BE",
+                                marginLeft: "10px",
+                                cursor: "pointer",
+                              }}
+                            ></i>
+                          )}
 
+                          <button
+                            className="btn btn-outline-info mb-2 "
+                            style={{ minWidth: "30%" }}
+                            disabled
+                          >
+                            <h5>
+                              {" "}
+                              مجموع لیست سفارش :{" "}
+                              {!totalPrice == 0
+                                ? `${totalPrice.toLocaleString()} دلار`
+                                : "..."}{" "}
+                            </h5>
+                          </button>
 
-                    </tbody>
-                    <div>
-    </div>
-                  </table>
-  
-                  {ordeDetail.length != 0 && stateId == 1 && (
-                    <div style={{ width: "100%", textAlign: "center" }}>
-                      {flagButton &&     <i class="fa-solid fa-arrow-rotate-left fa-2xl" 
-                      onClick={resetBasketTable}
-                      style={{color:'#63E6BE', marginLeft:'10px', cursor:'pointer'}}></i>}
-                  
-<button className="btn btn-outline-info mb-2 " style={{minWidth:'30%'}} disabled> 
-  <h5> مجموع لیست سفارش  : {!totalPrice==0 ? `${totalPrice.toLocaleString()} دلار` :'...'} </h5>
-</button>
-
-                      <button
-                      style={{fontSize:'25px'}}
-                        className="btn btn-primary order-finaliz-button"
-                        type="submit"
-                      >
-                        {!flagButton ? 'به روز رسانی سفارش '  : 'تایید سفارش '}
-                      </button>
-                    </div>
-                  )}
-                             {ordeDetail.length != 0 && (stateId == 3 || stateId==4 )&& (
-                    <div style={{ width: "100%", textAlign: "center" }}>
-                      {flagButton &&     <i class="fa-solid fa-arrow-rotate-left fa-2xl" 
-                      onClick={resetBasketTable}
-                      style={{color:'#63E6BE', marginLeft:'10px', cursor:'pointer'}}></i>}
-                      <button
-                      style={{fontSize:'25px'}}
-                        className="btn btn-primary order-finaliz-button"
-                        type="submit"
-                      >
-                        {stateId== 3 ? ' تایید جهت پردازش' : 'تایید جهت تحویل '}
-                      
-                      </button>
-                    </div>
-                  )}
-                </DataTable>
-              </>
-            </form>
-      
-
-          </div>
-        </div>
-
-        <div className="col-3 order-right-message-div centerc" ref={classRef}>
-         
-            <div
-              className="order-right-message-refresh"
-              onClick={() => {
-                show("info","پیام ها به روز رسانی شد...");
-                notify()
-                classRef.current.classList.remove("order-message-show");
-                classRefB.current.classList.remove("pagination-ref");
-              }}
-            >
-              <i
-                class="fa-solid fa-rotate fa-xl"
-                style={{ color: "green" }}
-              ></i>
+                          <button
+                            style={{ fontSize: "25px" }}
+                            className="btn btn-primary order-finaliz-button"
+                            type="submit"
+                          >
+                            {!flagButton
+                              ? "به روز رسانی سفارش "
+                              : "تایید سفارش "}
+                          </button>
+                        </div>
+                      )}
+                      {ordeDetail.length != 0 &&
+                        (stateId == 3 || stateId == 4) && (
+                          <div style={{ width: "100%", textAlign: "center" }}>
+                            {flagButton && (
+                              <i
+                                class="fa-solid fa-arrow-rotate-left fa-2xl"
+                                onClick={resetBasketTable}
+                                style={{
+                                  color: "#63E6BE",
+                                  marginLeft: "10px",
+                                  cursor: "pointer",
+                                }}
+                              ></i>
+                            )}
+                            <button
+                              style={{ fontSize: "25px" }}
+                              className="btn btn-primary order-finaliz-button"
+                              type="submit"
+                            >
+                              {stateId == 3
+                                ? " تایید جهت پردازش"
+                                : "تایید جهت تحویل "}
+                            </button>
+                          </div>
+                        )}
+                    </DataTable>
+                    <h6>{userAddress}</h6>
+                  </>
+                </form>
+              </div>
             </div>
-     
-            <div className="order-right-message-divA">
-              {messageArray.length > 0 &&
-                messageArray.map((item) => (
-                  <div key={item.id} className={
-                    item.senderID === userId
-                    ? "order-messeage-desc-div-sender centerr"
-                    : "order-messeage-desc-div centerr"
 
-                  }>
+            <div
+              className="col-3 order-right-message-div centerc"
+              ref={classRef}
+            >
+              <div
+                className="order-right-message-refresh"
+                onClick={() => {
+                  show("info", "پیام ها به روز رسانی شد...");
+                  notify();
+                  classRef.current.classList.remove("order-message-show");
+                  classRefB.current.classList.remove("pagination-ref");
+                }}
+              >
+                <i
+                  class="fa-solid fa-rotate fa-xl"
+                  style={{ color: "green" }}
+                ></i>
+              </div>
 
-                    
-
-                    <h5
+              <div className="order-right-message-divA">
+                {messageArray.length > 0 &&
+                  messageArray.map((item) => (
+                    <div
+                      key={item.id}
                       className={
                         item.senderID === userId
-                          ? "order-messeage-desc-sender"
-                          : "order-messeage-desc"
+                          ? "order-messeage-desc-div-sender centerr"
+                          : "order-messeage-desc-div centerr"
                       }
                     >
-                      {item.description}
-                      <span className="order-messeage-desc-sendername">{item.senderName}</span>
-                      <span className="order-messeage-desc-date">
-                      {/* {DateFormat(item.sentDate)} */}
-                      {/* <DateFormat dateString="2024-10-08T14:30:00Z" /> */}
-                      <DateFormat dateString={`${item.sentDate}`} />
-
-              
-                    </span>
-  { item.fileID!=null ? <button 
-                    className="order-downlod-button"
-                    onClick={()=>{
-                      setGuIdB(item.fileID)
-                      setVisible(false)
-                      Swal.fire({
-                        title: "فایل دانلود شود؟",
-                        showDenyButton: true,
-                        // showCancelButton: true,
-                        confirmButtonText: "بله",
-                        denyButtonText: `خیر`
-                      }).then((result) => {
-                        /* Read more about isConfirmed, isDenied below */
-                        if (result.isConfirmed) {
-                          DownloadFile(item.fileID)
-                 Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: " فابل در حال دانلود است",
-                        showConfirmButton: false,
-                        timer: 500,
-                        // color:'#208fe0'
-                      }).then(res=>setVisible(true)) } 
-                        else if (result.isDenied) {
-                          setVisible(true);
+                      <h5
+                        className={
+                          item.senderID === userId
+                            ? "order-messeage-desc-sender"
+                            : "order-messeage-desc"
                         }
-                      });
-                     
-                    }}><i class="fa-solid fa-file-arrow-down fa-bounce fa-2xl" style={{color:'#74C0FC'}}  ></i>
-                    
-                    </button>    :    ''
-                    }
-                    </h5>
+                      >
+                        {item.description}
+                        <span className="order-messeage-desc-sendername">
+                          {item.senderName}
+                        </span>
+                        <span className="order-messeage-desc-date">
+                          {/* {DateFormat(item.sentDate)} */}
+                          {/* <DateFormat dateString="2024-10-08T14:30:00Z" /> */}
+                          <DateFormat dateString={`${item.sentDate}`} />
+                        </span>
+                        {item.fileID != null ? (
+                          <button
+                            className="order-downlod-button"
+                            onClick={() => {
+                              setGuIdB(item.fileID);
+                              setVisible(false);
+                              Swal.fire({
+                                title: "فایل دانلود شود؟",
+                                showDenyButton: true,
+                                // showCancelButton: true,
+                                confirmButtonText: "بله",
+                                denyButtonText: `خیر`,
+                              }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                  DownloadFile(item.fileID);
+                                  Swal.fire({
+                                    position: "center",
+                                    icon: "success",
+                                    title: " فابل در حال دانلود است",
+                                    showConfirmButton: false,
+                                    timer: 500,
+                                    // color:'#208fe0'
+                                  }).then((res) => setVisible(true));
+                                } else if (result.isDenied) {
+                                  setVisible(true);
+                                }
+                              });
+                            }}
+                          >
+                            <i
+                              class="fa-solid fa-file-arrow-down fa-bounce fa-2xl"
+                              style={{ color: "#74C0FC" }}
+                            ></i>
+                          </button>
+                        ) : (
+                          ""
+                        )}
+                      </h5>
 
-
-                  
-                    
-              
-
-                    {item.senderID !== userId && item.status == 2 && (
-                      <span>
-                        <i
-                          class="fa-solid fa-check-double"
-                          style={{ color: "#63E6BE" }}
-                        ></i>
-                      </span>
-                    )}
-                    {item.senderID !== userId && item.status == 1 && (
-                      <span>
-                        <i
-                          class="fa-solid fa-check"
-                          style={{ color: "#63E6BE" }}
-                        ></i>
-                      </span>
-                    )}
-                  </div>
-                ))}
-            </div>
-            <div className="order-right-message-divB">
-              <textarea
-                name=""
-                id=""
-                placeholder="پیامت را اینجا بنویس..."
-                value={textArea}
-                onChange={changeTextArea}
-              ></textarea>
-
-              <div className="order-right-message-file-div">
-              <span><UploadFileIcon />
-              </span>
-                <input
-                  type="file"
-                  className="order-right-message-file-input"
-                  onChange={fileChange}
-                />
-                <div className="order-file-i order-hide " ref={classRefC}>
-                  <i class="fa-solid fa-file-circle-check fa-2xl fa-beat-fade" style={{ color:'#63E6BE' ,  marginRight:'40px'}}></i>
-                </div>
-
-
-              </div> 
-              <div className="centerr order-sendMessage-sms-div " >
-                            <button className="btn btn-info" onClick={sendHandler}>
-                ارسال
-              <SendIcon/>
-              </button>
-
-
-            <input 
-  className="order-sms-input"
-   type="checkbox"   
-   checked={isChecked}   
-   onChange={changeSMSbox}
-// onChange={} 
-/>    
-{/* <i class="fa-solid fa-comment-sms fa-lg" style= {{color:'#74C0FC'}}></i> */}
-
+                      {item.senderID !== userId && item.status == 2 && (
+                        <span>
+                          <i
+                            class="fa-solid fa-check-double"
+                            style={{ color: "#63E6BE" }}
+                          ></i>
+                        </span>
+                      )}
+                      {item.senderID !== userId && item.status == 1 && (
+                        <span>
+                          <i
+                            class="fa-solid fa-check"
+                            style={{ color: "#63E6BE" }}
+                          ></i>
+                        </span>
+                      )}
+                    </div>
+                  ))}
               </div>
+              <div className="order-right-message-divB">
+                <textarea
+                  name=""
+                  id=""
+                  placeholder="پیامت را اینجا بنویس..."
+                  value={textArea}
+                  onChange={changeTextArea}
+                ></textarea>
 
-  
- 
-         
+                <div className="order-right-message-file-div">
+                  <span>
+                    <UploadFileIcon />
+                  </span>
+                  <input
+                    type="file"
+                    className="order-right-message-file-input"
+                    onChange={fileChange}
+                  />
+                  <div className="order-file-i order-hide " ref={classRefC}>
+                    <i
+                      class="fa-solid fa-file-circle-check fa-2xl fa-beat-fade"
+                      style={{ color: "#63E6BE", marginRight: "40px" }}
+                    ></i>
+                  </div>
+                </div>
+                <div className="centerr order-sendMessage-sms-div ">
+                  <button className="btn btn-info" onClick={sendHandler}>
+                    ارسال
+                    <SendIcon />
+                  </button>
+
+                  <input
+                    className="order-sms-input"
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={changeSMSbox}
+                    // onChange={}
+                  />
+                  {/* <i class="fa-solid fa-comment-sms fa-lg" style= {{color:'#74C0FC'}}></i> */}
+                </div>
+              </div>
             </div>
           </div>
-
-              </div>
-             </div>
-            </Sidebar>
-            {/* <Button icon="pi pi-window-maximize" onClick={() => setVisible(true)} /> */}
+        </div>
+      </Sidebar>
+      {/* <Button icon="pi pi-window-maximize" onClick={() => setVisible(true)} /> */}
       <div className="row">
         <div className="col-12">
           <ToastContainer
@@ -995,12 +1047,11 @@ placeholder={item.information}
             // transition="Zoom"
           />
 
-
           <label className="order--state-selectlabel">دسته بندی :</label>
           <select
             className="order-state"
             onChange={(e) => {
-              setPage(1)
+              setPage(1);
               if (e.target.value) {
                 setStateId(e.target.value);
                 setOrdeDetail([]);
@@ -1013,8 +1064,7 @@ placeholder={item.information}
               }
             }}
           >
-            {mode.mode2 &&  <option value='2'>سفارشات آنلاین </option>
-            }
+            {mode.mode2 && <option value="2">سفارشات آنلاین </option>}
             {stateArraySelect.map((item) => (
               <>
                 <option key={item.id} value={item.id}>
@@ -1025,11 +1075,9 @@ placeholder={item.information}
           </select>
         </div>
 
-{/* //////////////////section 1 */}
+        {/* //////////////////section 1 */}
 
         <div className="col-12 order-rghit-maindiv">
-     
-
           <div className="order-table">
             {statearray.length == 0 && (
               <div className="order-colsm9-div ">
@@ -1048,73 +1096,106 @@ placeholder={item.information}
                 title={"لیست سفارشات : "}
               >
                 {/* <table className="table table-striped order-basket"> */}
-                <table className={!homeContext.themContext ? 'table table-striped   order-basket':'table table-striped table-dark  order-basket'}>
+                <table
+                  className={
+                    !homeContext.themContext
+                      ? "table table-striped   order-basket"
+                      : "table table-striped table-dark  order-basket"
+                  }
+                >
                   <thead>
                     <tr key="">
                       <th>ردیف</th>
                       <th>شناسه سفارش</th>
                       <th>نام مشتری </th>
-                      {mode.mode2 && 
-                      <> 
-                      <th>مشخصات مشتری </th>
-                        <th>مبلغ فاکتور</th>
-                      </>
-                       
-                      }
-                    
+                      {mode.mode2 && (
+                        <>
+                          <th>مشخصات مشتری </th>
+                          <th>مبلغ فاکتور</th>
+                        </>
+                      )}
+
                       <th>شناسه مشتری</th>
                       <th>تاریخ ثبت سفارش </th>
-                      <th>تاریخ ارايه استعلام  </th>
-                      <th>تاریخ آغاز سفارش   </th>
+                      <th>تاریخ ارايه استعلام </th>
+                      <th>تاریخ آغاز سفارش </th>
                       <th>وضعیت</th>
                       <th>مشاهده</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {statearray.itemList.map((item,index) => (
+                    {statearray.itemList.map((item, index) => (
                       <>
                         <tr key={item.id}>
-                          <th>{((page-1)*pageCount)+ index+1}</th>
+                          <th>{(page - 1) * pageCount + index + 1}</th>
                           <td className="order-basket__id">{item.id}</td>
-                          <td className="order-basket__id">{item.userName ? item.userName : item.cyUserID}</td>
-                          {mode.mode2 && <>
-                           <th><button className="btn btn-success" onClick={()=>getprofile(item.cyUserID)}>...</button> </th>
-                           <th style={{fontWeight:'600',fontSize:'15px'}}>{(item.totalAmount/10).toLocaleString()}تومان</th>
-                          </>
-                       
-                      }
+                          <td className="order-basket__id">
+                            {item.userName ? item.userName : item.cyUserID}
+                          </td>
+                          {mode.mode2 && (
+                            <>
+                              <th>
+                                <button
+                                  className="btn btn-success"
+                                  onClick={() =>{
+                                    getprofile(item.cyUserID)
+                                  } }
+                                >
+                                  ...
+                                </button>{" "}
+                              </th>
+                              <th
+                                style={{ fontWeight: "600", fontSize: "15px" }}
+                              >
+                                {(item.totalAmount / 10).toLocaleString()}تومان
+                              </th>
+                            </>
+                          )}
                           <td>{item.cyUserID}</td>
                           <td>
                             {/* {DateFormat(item.orderDate)} */}
                             {/* <DateFormat dateString="2024-10-08" /> */}
                             <DateFormat dateString={`${item.orderDate}`} />
-
-                            </td>
-                            <td> {item.finalizedDate ?  <DateFormat dateString={`${item.finalizedDate}`}  /> : "" }</td>
-                            <td> {item.inProcessDate ?  <DateFormat dateString={`${item.inProcessDate}`}  /> : "" }</td>
-
-
-
+                          </td>
+                          <td>
+                            {" "}
+                            {item.finalizedDate ? (
+                              <DateFormat
+                                dateString={`${item.finalizedDate}`}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </td>
+                          <td>
+                            {" "}
+                            {item.inProcessDate ? (
+                              <DateFormat
+                                dateString={`${item.inProcessDate}`}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </td>
 
                           <td>{item.statusText}</td>
                           <td className="order-button-notifi-td">
-                            {item.notification &&  <NotificationsIcon />}
-                          
+                            {item.notification && <NotificationsIcon />}
+
                             <button
                               className="btn btn-info"
                               onClick={() => {
-                                
+                                searchOrdersAddress(item.id)
                                 seeOrderDetail(item.id, item.quantity);
                                 setOrderID(item.id);
                                 setUserId(item.cyUserID);
                                 window.scrollTo(0, 0);
-                                setTotalPrice(0)
-                                 setVisible(true)
-                                 setTextArea('')
-                                 setResultArray([])
-                                 reset(setValue(''))
+                                setTotalPrice(0);
+                                setVisible(true);
+                                setTextArea("");
+                                setResultArray([]);
+                                reset(setValue(""));
                                 //  console.log(messageArray)
-
                               }}
                             >
                               ...
@@ -1143,34 +1224,28 @@ placeholder={item.information}
             )}
           </div>
         </div>
-       
       </div>
       <>
-      <Modal show={showB} onHide={handleCloseB}>
-   
-        <Modal.Body>
-          <table className="table">
-            <thead>
-              <tr>
-    <th>نام </th>
-            <th>نام خانوادگی </th>
-            <th>شماره همراه</th>
-</tr>
-            </thead>
+        <Modal show={showB} onHide={handleCloseB}>
+          <Modal.Body>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>نام </th>
+                  <th>نام خانوادگی </th>
+                  <th>شماره همراه</th>
+                </tr>
+              </thead>
 
-          
-      
-
-<tbody>
-  <tr>
-   
-    <td>{profile.family}</td>
-    <td>{profile.name}</td>
-    <td>{profile.mobile}</td>
-  </tr>
-</tbody>
-    </table>
-          {/* <ul>
+              <tbody>
+                <tr>
+                  <td>{profile.family}</td>
+                  <td>{profile.name}</td>
+                  <td>{profile.mobile}</td>
+                </tr>
+              </tbody>
+            </table>
+            {/* <ul>
              {profile && <>
              <li>{profile.name}</li>
              <li>{profile.family}</li>
@@ -1178,12 +1253,9 @@ placeholder={item.information}
              <li>{profile.basketCount}</li>
              </>}
           </ul> */}
-         
-        </Modal.Body>
-  
-      </Modal>
+          </Modal.Body>
+        </Modal>
       </>
     </div>
   );
 }
-
