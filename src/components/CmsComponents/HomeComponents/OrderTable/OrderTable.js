@@ -1,7 +1,40 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import TableMin from '../TableMin'
+import ApiGetX2 from '../../../../utils/ApiServicesX/ApiGetX2'
+import { CmsContext } from '../../../../context/CmsContext';
+import ApiPostX4 from '../../../../utils/ApiServicesX/ApiPostX4';
+import { a } from '@table-library/react-table-library/index-a318de9b';
 
 export default function OrderTable() {
+    const cmsContext = useContext(CmsContext);
+  const headerAuth = `Bearer ${cmsContext.token.token}`;
+
+  const [users,setUsers]=useState([])
+  const [func,setFunc]=useState('')
+  const [allproducts,setAllProducts]=useState([])
+const [func2,setFunc2]=useState('')
+const [allOrders,setAllOrders]=useState([])
+
+
+
+
+useEffect(()=>{
+  let obj={
+    cat: 'string',
+    pageNumber: 0,
+    pageSize: 10
+  }
+  let obj2={
+    orderStatus: 2,
+    pageNumber: 0,
+    pageSize: 10
+  }
+  ApiGetX2('/api/CyUsers/GetUserByType/1',headerAuth,setUsers)
+  ApiPostX4('/api/CyProducts/getAllProducts',headerAuth,obj,setAllProducts,setFunc)
+  ApiPostX4('/api/CyOrders/GetOrdersByStatusAdmin',headerAuth,obj2,setAllOrders,setFunc2)
+
+},[])
+
   const transactions=[
     {id:1,name:'Reza Sadati',data:'12 Jun 2022',phone:9196235112,email:'Reza@Gmail.com',img:'../../../images/face/images (1).jpg'},
     {id:2,name:'Ali Alimi',data:'5 Feb 2023',phone:9127506258,email:'Ali@Gmail.com',img:'../../../images/face/download.jpg'},
@@ -26,11 +59,11 @@ const products=[
     <div className='container centerr' >
 
       <div className='row'>
-<div className='col col-md-4'><TableMin title=' آخرین کاربران  :' users={transactions} th1='شناسه'th2='تصویر' th3='کاربر' table='table-primary'/>
+<div className='col col-md-4'><TableMin title=' آخرین کاربران  :' users={users.length!=0 ? users.slice().reverse().slice(0,10): transactions} th1='شناسه'th2='تصویر' th3='کاربر' table='table-primary' />
 </div>
-<div className='col col-md-4'><TableMin title=' آخرین محصولات :' users={products} th1='شناسه'th2='تصویر' th3='کاربر' table='table-info'/>
+<div className='col col-md-4'><TableMin title=' آخرین محصولات :' users={allproducts.itemList ? allproducts.itemList : products} th1='شناسه'th2='تصویر' th3='محصول' table='table-info'/>
 </div>
-<div className='col col-md-4'><TableMin title='آخرین سفارشات :' users={transactions} th1='شناسه'th2='تصویر' th3='کاربر' table='table-warning'/>
+<div className='col col-md-4'><TableMin title='آخرین سفارشات :' users={allOrders.itemList ? allOrders.itemList : transactions} th1='شناسه'th2='مشتری' th3='مبلغ' table='table-warning'/>
 </div>
 
       </div>
