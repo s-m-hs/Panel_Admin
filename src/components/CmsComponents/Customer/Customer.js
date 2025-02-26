@@ -14,6 +14,7 @@ import DotLoader from "react-spinners/DotLoader";
 import { useForm } from "react-hook-form"
 import apiUrl from '../../../utils/ApiConfig';
 import mode from '../../../utils/ModsB';
+import ApiPostX from '../../../utils/ApiServicesX/ApiPostX';
 
 
 export default function Customer() {
@@ -26,6 +27,8 @@ const[localToken,setLocalToken]=useState('')
 const[profileDetail,setProfileDetail]=useState([])
   const cmsContext = useContext(CmsContext)
   const homeContext=useContext(HomeContext)
+  const headerAuth = `Bearer ${cmsContext.token.token}`;
+
   const [searchUser,setSearchUser]=useState('')
   const [searchUserArray,setSearchUserArray]=useState([])
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useFormA({
@@ -98,164 +101,119 @@ useEffect(()=>{
     // console.log(data)
     if (!flagUpdate) {
       let obj = {
-        // id: 0,
-        un: data.customerName,
+        un: data.customerMobile,
         pw: data.password,
-        // status: Number(data.customerStatus),
-        // customerType: Number(data.customercustomerType)
+        name:data.customerName
       }
+    
       async function myAppPost() {
-        const res = await fetch(`${apiUrl}/api/Customer/register`, {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(obj)
-        }).then(res => {
-          if (res.ok) {
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "کاربر با موفقیت اضافه شد",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            reset(
-              setValue('')
-            )
-            getcustomerItem()
-          }
-        }
-        )
+ApiPostX('/api/Customer/addCustomerWAuyth',headerAuth,obj,function () {
+  Swal.fire({
+    position: "center",
+    icon: "success",
+    title: "کاربر با موفقیت اضافه شد",
+    showConfirmButton: false,
+    timer: 1500,
+  });
+  reset(
+    setValue('')
+  )
+  getcustomerItem()
+})
       }
       myAppPost()
 
     } 
-    // else if (flagUpdate) {
-    //   let obj = {
-    //     id: putId,
-    //     cyUsNm: data.update.customerName,
-    //     cyHsPs: data.update.password,
-    //     status: Number(data.update.customerStatus),
-    //     customerType: Number(data.update.customercustomerType)
-    //   }
-    //   async function myAppPut() {
-    //     const res = await fetch(`${apiUrl}/api/CyUsers/${putId}`, {
-    //       method: 'PUT',
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify(obj)
-    //     }).then(res => {
-    //       if (res.ok) {
-    //         Swal.fire({
-    //           position: "center",
-    //           icon: "success",
-    //           title: "ویرایش با موفقیت انجام شد",
-    //           showConfirmButton: false,
-    //           timer: 1500,
-    //         });
-    //         reset(
-    //           setValue('')
-    //         )
-    //         setFlagUpdate(false)
-    //         getcustomerItem()
-    //       }
-    //     }
-    //     )
-    //   }
-    //   myAppPut()
-    // }
   }
 
-  const handleRegistrationC=(data)=>{
-    let obj={
-      un: data.update.customerName,
-       pw:sha512(data.update.password )  
-     }
-     login(obj)
-     update()
-      }
+//   const handleRegistrationC=(data)=>{
+//     let obj={
+//       un: data.update.customerName,
+//        pw:sha512(data.update.password )  
+//      }
+//      login(obj)
+//      update()
+//       }
 
-  const handleRegistrationB=(data)=>{
-let obj={
-  id: 0,
-  cyUserID:profileDetail.cyUserID,
-  name: data.update.customerFirstName,
-  family: data.update.customerLastName,
-  email: 'string',
-  website: "string",
-  mobile: data.update.mobile,
-  description: "string",
-  userImageUrl: "string",
-  username:profileDetail.username
-}
-async function myApp(){
-  const res=await fetch(`${apiUrl}/api/Customer/UpdateProfile`,{
-    method:'POST',
-    headers: {
-      "Content-Type": "application/json",
-      Authorization:`Bearer ${localToken}`
-    },
-    body:JSON.stringify(obj)
-  }).then(res=>{
-    // console.log(res)
-if(res.status==200){
-  // alertA()
-  return res.json()
-}
-  }
-  )
-}
+//   const handleRegistrationB=(data)=>{
+// let obj={
+//   id: 0,
+//   cyUserID:profileDetail.cyUserID,
+//   name: data.update.customerFirstName,
+//   family: data.update.customerLastName,
+//   email: 'string',
+//   website: "string",
+//   mobile: data.update.mobile,
+//   description: "string",
+//   userImageUrl: "string",
+//   username:profileDetail.username
+// }
+// async function myApp(){
+//   const res=await fetch(`${apiUrl}/api/Customer/UpdateProfile`,{
+//     method:'POST',
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization:`Bearer ${localToken}`
+//     },
+//     body:JSON.stringify(obj)
+//   }).then(res=>{
+//     // console.log(res)
+// if(res.status==200){
+//   // alertA()
+//   return res.json()
+// }
+//   }
+//   )
+// }
 
-myApp()
-  }
-///////////////////////////
-const login=(obj)=>{
-  async function myAppPost(){
-    const getLocalStorage=localStorage.getItem('loginTokenCustomer')
-    const res=await fetch(`${apiUrl}/api/Customer/login`,{
-      method:'POST',
-      headers:{
-        "Content-Type": "application/json",
-        Authorization:`Bearer ${getLocalStorage}` ,
-      },
-      body:JSON.stringify(obj)
-    }).then(res=>{
-      if(res.status==200){
-        return res.json()
-      }
-    }).then(result=>{
-      if(result){
-        localStorage.setItem('loginTokenCustomer',result.token)
-        // localStorage.setItem('user',obj.un)
-        setLocalToken(result.token)
+// myApp()
+//   }
+// ///////////////////////////
+// const login=(obj)=>{
+//   async function myAppPost(){
+//     const getLocalStorage=localStorage.getItem('loginTokenCustomer')
+//     const res=await fetch(`${apiUrl}/api/Customer/login`,{
+//       method:'POST',
+//       headers:{
+//         "Content-Type": "application/json",
+//         Authorization:`Bearer ${getLocalStorage}` ,
+//       },
+//       body:JSON.stringify(obj)
+//     }).then(res=>{
+//       if(res.status==200){
+//         return res.json()
+//       }
+//     }).then(result=>{
+//       if(result){
+//         localStorage.setItem('loginTokenCustomer',result.token)
+//         // localStorage.setItem('user',obj.un)
+//         setLocalToken(result.token)
   
-      }else{
-        // alertB()
-      }
-    })
-  }
-  myAppPost()
+//       }else{
+//         // alertB()
+//       }
+//     })
+//   }
+//   myAppPost()
 
-}
-  /////////////////////////
-  const getProfile=()=>{
-    async function myApp(){
-      const res=await fetch(`${apiUrl}/api/Customer/GetProfile`,{
-        method:'GET',
-        headers: {
-          Authorization: `Bearer ${localToken}`,
-          "Content-Type": "application/json",
-        },
-      }).then(res=>{
-        return res.json()
-      }).then(result=>{
-        setProfileDetail(result)
-      })
-    }
-    myApp()
-  }
+// }
+//   /////////////////////////
+//   const getProfile=()=>{
+//     async function myApp(){
+//       const res=await fetch(`${apiUrl}/api/Customer/GetProfile`,{
+//         method:'GET',
+//         headers: {
+//           Authorization: `Bearer ${localToken}`,
+//           "Content-Type": "application/json",
+//         },
+//       }).then(res=>{
+//         return res.json()
+//       }).then(result=>{
+//         setProfileDetail(result)
+//       })
+//     }
+//     myApp()
+//   }
   /////////////////////////////////
   const getcustomerItem = () => {
     async function myAppGetcustomer() {
@@ -275,11 +233,18 @@ const login=(obj)=>{
     swalWithBootstrapButtons.fire({
       title: "آیا از حذف اطمینان دارید؟",
       icon: "warning",
+      input: "text",
       showCancelButton: true,
       confirmButtonText: "بله",
       cancelButtonText: "خیر ",
-      reverseButtons: true
-    }).then((result => {
+      reverseButtons: true,
+      preConfirm: (value) => {
+        if (value.toLowerCase() !== "ok") {
+          Swal.showValidationMessage("کلمه عبور را وارد");
+        }
+        return value.toLowerCase() === "ok"; 
+      },
+    }).then((result) => {
       if (result.isConfirmed) {
         async function myAppDelet() {
           const res = await fetch(`${apiUrl}/api/CyUsers/${id}`, {
@@ -305,10 +270,43 @@ const login=(obj)=>{
           icon: "error"
         });
       }
-    }))
+
+
+
+    })
     reset(
       setValue('')
     )
+    
+  //   .then((result => {
+  //     if (result.isConfirmed) {
+  //       async function myAppDelet() {
+  //         const res = await fetch(`${apiUrl}/api/CyUsers/${id}`, {
+  //           method: 'DELETE'
+  //         }).then(
+  //           res => console.log(res)
+  //         ).then(result => {
+  //           swalWithBootstrapButtons.fire({
+  //             title: "حذف انجام شد!",
+  //             icon: "success"
+  //           }).then(result => {
+  //             getcustomerItem()
+  //           })
+  //         })
+  //       }
+  //       myAppDelet()
+  //     } else if (
+
+  //       result.dismiss === Swal.DismissReason.cancel
+  //     ) {
+  //       swalWithBootstrapButtons.fire({
+  //         title: "حذف انجام نشد",
+  //         icon: "error"
+  //       });
+  //     }
+  //   }
+  // ))
+
   }
   /////////////////////
   const editHandler = (...data) => {
@@ -338,11 +336,11 @@ const login=(obj)=>{
   return (
     <div className='container '>
       <div className="row">
-      {/* {!flagUpdate &&  <div className='col-12 col-sm-3 customer-col3 '>
+      {!flagUpdate &&  <div className='col-12 col-sm-3 customer-col3 '>
          <form action="" onSubmit={handleSubmit(handleRegistration, handleError)}
          className='customer-col3-form'
          >
-            <div className="login-label-float">
+   <div className="login-label-float">
               <input
                 // disabled
                 name="customerName"
@@ -353,6 +351,20 @@ const login=(obj)=>{
               />
               <label> نام کاربری</label>
             </div>
+
+            <div className="login-label-float">
+              <input
+                // disabled
+                name="customerMobile"
+                type="number"
+                placeholder=""
+                className={errors.customerName ? 'formerror' : ''}
+                {...register(!flagUpdate ? 'customerMobile' : 'update.customerMobile', registerOptions.customerMobile)}
+              />
+              <label>شماره همراه</label>
+            </div>
+
+
             <div className="login-label-float">
               <input
                 // disabled
@@ -362,8 +374,10 @@ const login=(obj)=>{
                 className={errors.password ? 'formerror' : ''}
                 {...register(!flagUpdate ? 'password' : 'update.password', registerOptions.password)}
               />
-              <label> رمزعبور</label>
+              <label> رمزعبور(حداقل 4 کاراکتر)</label>
             </div>
+
+
 
             {flagUpdate && <div className='customer-resticon'>
               <i class="fa-solid fa-rotate-left fa-2xl" style={{ color: ' #74C0FC' }} onClick={resetUpdatField}></i>
@@ -380,7 +394,7 @@ const login=(obj)=>{
                 <span>  افزودن </span>
           
             </Button>
-          </form> </div> } */}
+          </form> </div> }
   
          
 
@@ -559,7 +573,7 @@ const login=(obj)=>{
                     <th>موبایل </th>
                     <th>وضعیت کاربر</th>
                     <th>شناسه</th>
-                    <th>ویرایش/حذف</th>
+                    <th>حذف</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -572,11 +586,11 @@ const login=(obj)=>{
                       <td>{customerStatus?.filter(filter => { return filter.statusId == item.status })[0]?.status}    </td>
                       <td>{item.cyUserID}</td>
                       <td>
-                        <button className='btn btn-info customer-editbut'
+                        {/* <button className='btn btn-info customer-editbut'
                           onClick={() => editHandler(item.id, item.cyUsNm, item.cyHsPs, item.status, item.customerType)}
-                        >ویرایش</button>
+                        >ویرایش</button> */}
                         <button className='btn btn-danger customer-deletbut'
-                          onClick={() => deleteHandler(item.id)}
+                          onClick={() => deleteHandler(item.cyUserID)}
                         >حذف</button>
                       </td>
                     </tr>

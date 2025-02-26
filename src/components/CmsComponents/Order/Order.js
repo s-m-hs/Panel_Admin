@@ -24,6 +24,7 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import SendIcon from "@mui/icons-material/Send";
 import mode from "../../../utils/ModsB";
 import Modal from "react-bootstrap/Modal";
+import alertC from "../../../utils/AlertFunc/AlertC";
 
 export default function Order() {
   const [stateId, setStateId] = useState(() => {
@@ -406,10 +407,13 @@ const [userAddress,setUserAddress]=useState('')
     let id = `${orderId}&status=4`;
     ApiPutX3("/api/CyOrders/sendToInProccess?orderId=", headerAuth, id, funcF);
   }
-  async function myAppPostC() {
+  const DeliveredOrder=()=>{
+    console.log(orderId)
     let id = `${orderId}&status=5`;
     ApiPutX3("/api/CyOrders/sendToInProccess?orderId=", headerAuth, id, funcF);
+
   }
+
 
   ///////////////////////////////
   useEffect(() => {
@@ -449,7 +453,6 @@ const [userAddress,setUserAddress]=useState('')
         showConfirmButton: false,
         timer: 1500,
       }).then((res) => {
-        myAppPostC();
         window.scrollTo(0, 0);
         setFlagButton(false);
       });
@@ -1179,6 +1182,14 @@ const [userAddress,setUserAddress]=useState('')
                           </td>
 
                           <td>{item.statusText}</td>
+                          <td><button className="btn btn-warning"
+                          onClick={()=>{
+                            setOrderID(item.id);
+                            alertC('ddd', DeliveredOrder)
+                          }}
+                          >
+                            *$*
+                            </button> </td>
                           <td className="order-button-notifi-td">
                             {item.notification && <NotificationsIcon />}
 

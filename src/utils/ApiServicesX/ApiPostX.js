@@ -1,4 +1,5 @@
 import apiUrl from "../ApiConfig";
+import Swal from 'sweetalert2'
 
 const ApiPostX=(url,headerAuth,obj,func)=>{
 async function myAppPost() {
@@ -15,6 +16,22 @@ async function myAppPost() {
             return res.json().then(result=>{
         func()
     })
+        }else{
+            return res.json().then(result=>{
+                console.log(result)
+                if(result.response){
+ Swal.fire({
+        position: "center",
+        icon: "error",
+        title: result.response,
+        showConfirmButton: false,
+        timer: 1500,
+    })
+                }
+            }
+                
+            
+            )
         }
     }
     ).catch(err => console.log(err))
