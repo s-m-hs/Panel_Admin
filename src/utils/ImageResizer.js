@@ -12,6 +12,7 @@ const ImageResizer = ({ handleImageUpload }) => {
   const [imageId, setImageId] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 300, height: 300 });
   const [localAltText, setLocalAltText] = useState(""); // استیت برای ذخیره alt text
+  let{setShowImageDiv}=useContext(EdiContext)
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
@@ -80,15 +81,20 @@ const ImageResizer = ({ handleImageUpload }) => {
   });
 
   return (
-    <div>
+    <div >
+            <i class="fa-regular fa-circle-xmark" onClick={()=>setShowImageDiv(false)} style={{cursor:'pointer' ,marginBottom:'20px'}} ></i>
+
       <div
+      
         {...getRootProps()}
         style={{
           border: "2px dashed gray",
           padding: "20px",
           textAlign: "center",
+          cursor:'pointer'
         }}
       >
+        
         <input {...getInputProps()} />
         <p>عکس را انتخاب کنید یا به اینجا بکشید</p>
       </div>
