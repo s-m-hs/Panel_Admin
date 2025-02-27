@@ -102,7 +102,7 @@ const [userAddress,setUserAddress]=useState('')
     // toast.success(`${title}`);
     setFile({});
     setGuId("");
-    setFlag((prev) => !prev);
+    // setFlag((prev) => !prev);
     setTextArea("");
   };
   // const  notifyB = (title) => {
@@ -116,13 +116,13 @@ const [userAddress,setUserAddress]=useState('')
   };
   ////////////////////////////
   const stateArraySelect = [
-    { id: 1, state: "ارسال جهت استعلام گیری  " },
-    { id: 2, state: "درانتظار تایید مشتری" },
-    { id: 3, state: "تایید مشتری" },
-    { id: 4, state: "در حال تامین" },
+    // { id: 1, state: "ارسال جهت استعلام گیری  " },
+    // { id: 2, state: "سفارشات آنلاین" },
+    // { id: 3, state: "تایید مشتری" },
+    // { id: 4, state: "در حال تامین" },
     { id: 5, state: "تحویل داده شده" },
-    { id: 6, state: "لغو شده" },
-    { id: 7, state: " همه سفارشات" },
+    // { id: 6, state: "لغو شده" },
+    { id: 0, state: " همه سفارشات" },
   ];
   //////////////////////////
   const changeTextArea = (e) => {
@@ -378,35 +378,35 @@ const [userAddress,setUserAddress]=useState('')
     }
   }, [resultArray]);
 
-  async function myAppPost() {
-    const res = await fetch(
-      `${apiUrl}/api/CyOrders/FinalizeOrder?OrderId=${orderId}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: headerAuth,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(resultArray),
-      }
-    ).then((res) => {
-      if (res.status == 200) {
-        setResultArray([]);
-        setOrdeDetail([]);
-        reset(setValue(""));
-        setVisible(false);
-      }
-    });
-  }
+  // async function myAppPost() {
+  //   const res = await fetch(
+  //     `${apiUrl}/api/CyOrders/FinalizeOrder?OrderId=${orderId}`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: headerAuth,
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(resultArray),
+  //     }
+  //   ).then((res) => {
+  //     if (res.status == 200) {
+  //       setResultArray([]);
+  //       setOrdeDetail([]);
+  //       reset(setValue(""));
+  //       setVisible(false);
+  //     }
+  //   });
+  // }
   const funcF = () => {
     setResultArray([]);
     setOrdeDetail([]);
     reset(setValue(""));
   };
-  async function myAppPostB() {
-    let id = `${orderId}&status=4`;
-    ApiPutX3("/api/CyOrders/sendToInProccess?orderId=", headerAuth, id, funcF);
-  }
+  // async function myAppPostB() {
+  //   let id = `${orderId}&status=4`;
+  //   ApiPutX3("/api/CyOrders/sendToInProccess?orderId=", headerAuth, id, funcF);
+  // }
   const DeliveredOrder=()=>{
     console.log(orderId)
     let id = `${orderId}&status=5`;
@@ -416,48 +416,48 @@ const [userAddress,setUserAddress]=useState('')
 
 
   ///////////////////////////////
-  useEffect(() => {
-    if (stateId == 1 && ordeDetail.length != 0) {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: " جهت تایید مشتری ارسال گردید",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then((res) => {
-        myAppPost();
-        window.scrollTo(0, 0);
-        setFlagButton(false);
-      });
-    }
-  }, [resultArrayFlag]);
+  // useEffect(() => {
+  //   if (stateId == 1 && ordeDetail.length != 0) {
+  //     Swal.fire({
+  //       position: "center",
+  //       icon: "success",
+  //       title: " جهت تایید مشتری ارسال گردید",
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     }).then((res) => {
+  //       myAppPost();
+  //       window.scrollTo(0, 0);
+  //       setFlagButton(false);
+  //     });
+  //   }
+  // }, [resultArrayFlag]);
 
-  useEffect(() => {
-    if (stateId == 3 && ordeDetail.length != 0) {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: " سفارش جهت پردازش ارسال گردید",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then((res) => {
-        myAppPostB();
-        window.scrollTo(0, 0);
-        setFlagButton(false);
-      });
-    } else if (stateId == 4 && ordeDetail.length != 0) {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: " سفارش جهت تحویل ارسال گردید",
-        showConfirmButton: false,
-        timer: 1500,
-      }).then((res) => {
-        window.scrollTo(0, 0);
-        setFlagButton(false);
-      });
-    }
-  }, [resultArray]);
+  // useEffect(() => {
+  //   if (stateId == 3 && ordeDetail.length != 0) {
+  //     Swal.fire({
+  //       position: "center",
+  //       icon: "success",
+  //       title: " سفارش جهت پردازش ارسال گردید",
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     }).then((res) => {
+  //       // myAppPostB();
+  //       window.scrollTo(0, 0);
+  //       setFlagButton(false);
+  //     });
+  //   } else if (stateId == 4 && ordeDetail.length != 0) {
+  //     Swal.fire({
+  //       position: "center",
+  //       icon: "success",
+  //       title: " سفارش جهت تحویل ارسال گردید",
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     }).then((res) => {
+  //       window.scrollTo(0, 0);
+  //       setFlagButton(false);
+  //     });
+  //   }
+  // }, [resultArray]);
 
   // console.log(ordeDetail);
   // console.log(statearray.itemList[0].address);
@@ -502,12 +502,36 @@ const [userAddress,setUserAddress]=useState('')
   useEffect(() => {
     getBGetOrdersByStatus(0, pageCount);
   }, [stateId, resultArray, inputValues]);
+  
+  useEffect(()=>{
+    if(orderId){
+      Swal.fire({
+        title: "از تحویل سفارش اطمینان دارید؟؟؟",
+        // text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "حله ✌️"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "سفارش در لیست تحویل داده شده ها قرار گرفت...",
+            // text: "Your file has been deleted.",
+            icon: "success"
+          });
+          DeliveredOrder()
+        }
+      });
 
-  useEffect(() => {
-    if (orderId) {
-      getMessageHandler();
+
+      // Swal.fire("از تحویل سفارش اطمینان دارید؟؟؟").then(res=>{
+       
+      // });
     }
-  }, [orderId, flag]);
+   
+  },[flag])
+  
   useEffect(() => {
     const chekKey2 = (e) => {
       if (e.keyCode == 13) {
@@ -523,6 +547,7 @@ const [userAddress,setUserAddress]=useState('')
     window.addEventListener("keydown", chekKey2);
     return () => window.removeEventListener("keydown", chekKey2);
   });
+
 
   return (
     <div className="container">
@@ -1113,17 +1138,15 @@ const [userAddress,setUserAddress]=useState('')
                       <th>نام مشتری </th>
                       {mode.mode2 && (
                         <>
-                          <th>مشخصات مشتری </th>
                           <th>مبلغ فاکتور</th>
                         </>
                       )}
 
                       <th>شناسه مشتری</th>
                       <th>تاریخ ثبت سفارش </th>
-                      <th>تاریخ ارايه استعلام </th>
-                      <th>تاریخ آغاز سفارش </th>
-                      <th>وضعیت</th>
-                      <th>مشاهده</th>
+                      <th>مشخصات مشتری </th>
+                      <th>جزییات سفارش</th>
+                      <th>تحویل شده</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1135,66 +1158,37 @@ const [userAddress,setUserAddress]=useState('')
                           <td className="order-basket__id">
                             {item.userName ? item.userName : item.cyUserID}
                           </td>
-                          {mode.mode2 && (
-                            <>
-                              <th>
-                                <button
-                                  className="btn btn-success"
-                                  onClick={() =>{
-                                    getprofile(item.cyUserID)
-                                  } }
-                                >
-                                  ...
-                                </button>{" "}
-                              </th>
+                      
+       
                               <th
                                 style={{ fontWeight: "600", fontSize: "15px" }}
                               >
                                 {(item.totalAmount / 10).toLocaleString()}تومان
                               </th>
-                            </>
-                          )}
+                      
                           <td>{item.cyUserID}</td>
                           <td>
                             {/* {DateFormat(item.orderDate)} */}
                             {/* <DateFormat dateString="2024-10-08" /> */}
                             <DateFormat dateString={`${item.orderDate}`} />
                           </td>
-                          <td>
-                            {" "}
-                            {item.finalizedDate ? (
-                              <DateFormat
-                                dateString={`${item.finalizedDate}`}
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </td>
-                          <td>
-                            {" "}
-                            {item.inProcessDate ? (
-                              <DateFormat
-                                dateString={`${item.inProcessDate}`}
-                              />
-                            ) : (
-                              ""
-                            )}
-                          </td>
+                
+                          <th>
+                                <button
+                                  className="btn btn-info"
+                                  onClick={() =>{
+                                    getprofile(item.cyUserID)
+                                  } }
+                                >
+☎️
+                                </button>{" "}
+                              </th>
 
-                          <td>{item.statusText}</td>
-                          <td><button className="btn btn-warning"
-                          onClick={()=>{
-                            setOrderID(item.id);
-                            alertC('ddd', DeliveredOrder)
-                          }}
-                          >
-                            *$*
-                            </button> </td>
                           <td className="order-button-notifi-td">
                             {item.notification && <NotificationsIcon />}
 
                             <button
-                              className="btn btn-info"
+                              className="btn btn-light"
                               onClick={() => {
                                 searchOrdersAddress(item.id)
                                 seeOrderDetail(item.id, item.quantity);
@@ -1209,9 +1203,24 @@ const [userAddress,setUserAddress]=useState('')
                                 //  console.log(messageArray)
                               }}
                             >
-                              ...
+                              🛒
                             </button>
                           </td>
+
+
+
+                          
+
+                          <td><button className="btn btn-warning"
+                          onClick={()=>{
+                            setOrderID(item.id);
+                            setFlag(!flag)
+                           
+                            // alertC('ddd', DeliveredOrder)
+                          }}
+                          >
+                            🚚
+                            </button> </td>
                         </tr>
                       </>
                     ))}

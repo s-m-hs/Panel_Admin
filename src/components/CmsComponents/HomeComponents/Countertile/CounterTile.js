@@ -22,56 +22,57 @@ export default function CounterTile() {
           <>
             <div class=" box2 centerc">
               <p>مدیران</p>
-              <CounterSpan count={35} />  
+              {/* <CounterSpan count={35} />   */}
             </div>
 
             <div class=" box3 centerc">
               <p>مشتریان</p>
 
-              <CounterSpan count={1500} />
+              {/* <CounterSpan count={1500} /> */}
             </div>
 
             <div class=" box4 centerc">
               <p>محصولات</p>
 
-              <CounterSpan count={4500} />
+              {/* <CounterSpan count={4500} /> */}
             </div>
 
             <div class=" box5 centerc">
               <p>مطالب</p>
 
-              <CounterSpan count={350} />
+              {/* <CounterSpan count={350} /> */}
             </div>
 
             <div class=" box6 centerc">
               <p>تیکتها</p>
 
-              <CounterSpan count={1400} />
+              {/* <CounterSpan count={1400} /> */}
             </div>
 
             <div class=" box7 centerc">
               <p>سفارشات</p>
 
-              <CounterSpan count={3500} />
+              {/* <CounterSpan count={3500} /> */}
             </div>
 
             <div class=" box8 centerc">
               <p> مرسولی</p>
 
-              <CounterSpan count={1500} />
+              {/* <CounterSpan count={1500} /> */}
             </div>
 
             <div class=" box9 centerc">
               <p>خدمات</p>
 
-              <CounterSpan count={1800} />
+              {/* <CounterSpan count={1800} /> */}
             </div>
           </>
         ) : (
           getNumber.map((item, index) => (
             <div class={`box${2 + index} centerc`}>
               <p>{item.name}</p>
-              <CounterSpan count={item.numProperty} />
+              <span>{item.numProperty} </span>
+              {/* <CounterSpan count={item.numProperty} /> */}
             </div>
           ))
         )}
