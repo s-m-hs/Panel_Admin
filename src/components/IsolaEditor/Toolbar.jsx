@@ -1,5 +1,5 @@
 // src/components/Toolbar.jsx
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import {
   FaAlignLeft,
   FaAlignCenter,
@@ -18,6 +18,8 @@ import {
 } from 'react-icons/fa'
 import './Toolbar.css'
 import { CmsContext, EdiContext } from '../../context/CmsContext'
+import { useSlate } from 'slate-react'
+import { Tune } from '@mui/icons-material'
 
 const Toolbar = ({
   addNewParagraph,
@@ -49,10 +51,20 @@ const Toolbar = ({
   handleFontSizeChange,
   toggleRowDirection,
   showModal,
-  handleHeadingToggle
+  handleHeadingToggle,
+  handleHeadingChange
 }) => {
   let{setShowImageDiv,toggleHText,setToggleHText}=useContext(EdiContext)
   let{setIsolaSave}=useContext(CmsContext)
+
+  const [selectFlag,setSelectFlag]=useState(true)
+
+const toggleSelectState=()=>{
+  setSelectFlag(false)
+  setTimeout(() => {
+    setSelectFlag(Tune)
+  }, 0.1);
+}
 
   // تابع برای تعیین قابلیت فعال بودن دکمه‌ها
   const isTextActive = () => {
@@ -68,10 +80,17 @@ const Toolbar = ({
 
   return (
     <div className='toolbar' style={{ marginTop: '40px', direction: 'rtl' }}>
+
+
+
+
       {/* افزودن پاراگراف */}
       <div className='icon-button-container'>
         <button
-          onClick={addNewParagraph}
+          onClick={()=>{
+            addNewParagraph()
+            toggleSelectState()
+          } }
           className='toolbar-button add-paragraph'
         >
           <FaPlus size={16} />
@@ -81,7 +100,10 @@ const Toolbar = ({
 
       {/* افزودن ردیف */}
       <div className='icon-button-container'>
-        <button onClick={addNewRow} className='toolbar-button add-row'>
+        <button onClick={()=>{
+          addNewRow()
+          toggleSelectState()
+        } } className='toolbar-button add-row'>
           <FaGripLines size={16} />
           <span className='tooltip'>افزودن ردیف</span>
         </button>
@@ -89,18 +111,39 @@ const Toolbar = ({
 
       {/* افزودن متن */}
       <div className='icon-button-container'>
-        <button onClick={addNewTextField} className='toolbar-button add-text'>
+        <button onClick={()=>{
+          addNewTextField()
+          toggleSelectState()
+        } } className='toolbar-button add-text'>
           <FaPencilAlt size={16} />
           <span className='tooltip'>افزودن متن</span>
         </button>
       </div>
 
-      <div className={toggleHText ? "icon-button-container": 'icon-button-container h1Class' } >
+      <div className='icon-button-container h1Class'>
+        {selectFlag &&  <>
+          <select onChange={(e) => handleHeadingChange(e.target.value)}>
+  <option value="text">Normal </option>
+  <option value="h1">Heading 1</option>
+  <option value="h2">Heading 2</option>
+  <option value="h3">Heading 3</option>
+  <option value="h4">Heading 4</option>
+  <option value="h5">Heading 5</option>
+</select>
+<span className='tooltip'>افزودن هدر</span>
+        </>}
+
+
+</div>
+
+ 
+
+      {/* <div className={toggleHText ? "icon-button-container": 'icon-button-container h1Class' } >
         <button onClick={handleHeadingToggle} className='toolbar-button add-text'>
           <FaPencilAlt size={16} />h1
           <span className='tooltip'>افزودن ssss</span>
         </button>
-      </div>
+      </div> */}
 
       {/* آپلود عکس */}
       <div className='icon-button-container'>
@@ -185,7 +228,7 @@ const Toolbar = ({
       </div>
 
       {/* تنظیم فاصله بین ردیف‌ها */}
-      <div className="icon-button-container">
+      {/* <div className="icon-button-container">
         <button
           onClick={() => setActivePopup(activePopup === "rowSpacing" ? null : "rowSpacing")}
           className="toolbar-button row-spacing"
@@ -213,9 +256,9 @@ const Toolbar = ({
             </label>
           </div>
         )}
-      </div>
+      </div> */}
       {/* تنظیم فاصله افقی بین عناصر */}
-      <div className="icon-button-container">
+      {/* <div className="icon-button-container">
         <button
           onClick={() => setActivePopup(activePopup === "elementGap" ? null : "elementGap")}
           className="toolbar-button element-gap"
@@ -243,7 +286,7 @@ const Toolbar = ({
             </label>
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* بولد کردن متن */}
       <div className='icon-button-container'>

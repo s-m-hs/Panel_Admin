@@ -100,7 +100,12 @@ const ParagraphContent = ({
           //   ? `${item.style.fontSize}px`
           //   : "14px",
           // fontWeight: item.style.fontWeight || "normal",
-          fontSize: item.type === "h1" ? "24px" : item.style.fontSize ? `${item.style.fontSize}px` : "14px",
+          fontSize:
+          //  item.type === "h1" ? "24px" :
+          // item.type === "h2" ? "20px" :
+          // item.type === "h3" ? "10px"  :
+          
+           item.style.fontSize ? `${item.style.fontSize}px` : "14px",
           fontWeight: item.type === "h1" ? "bold" : item.style.fontWeight || "normal",
           width: `${item.style.width}px`,
           height: isViewMode ? "auto" : `${item.style.height}px`,
@@ -140,14 +145,78 @@ const ParagraphContent = ({
             setActivePopup(null);
           }
         }}
+        
       >
         {isViewMode ? item.content : undefined}
       </Element>
     );
   }
-
+  // if (item.type.startsWith("h")) {
+  //   const HeadingTag = item.type; // مقدار می‌تواند h1, h2, h3, h4, h5 باشد
+  //   return (
+  //     <HeadingTag
+  //       key={itemIdx}
+  //       style={{
+  //         color: item.style.color || "#000",
+  //         textAlign: item.style.textAlign || "right",
+  //         direction: item.style.direction || "rtl",
+  //         margin: item.style.margin || "0px",
+  //         fontWeight: item.style.fontWeight || "bold",
+  //       }}
+  //     >
+  //       {item.content}
+  //     </HeadingTag>
+  //   );
+  // }
+  if (item.type.startsWith("h")) {
+    const HeadingTag = item.type; // مقدار می‌تواند h1, h2, h3, h4, h5 باشد
+    
+    return isViewMode ? (
+      <HeadingTag
+        key={itemIdx}
+        style={{
+          color: item.style.color || "#000",
+          textAlign: item.style.textAlign || "right",
+          direction: item.style.direction || "rtl",
+          margin: item.style.margin || "0px",
+          fontWeight: item.style.fontWeight || "bold",
+        }}
+      >
+        {item.content}
+      </HeadingTag>
+    ) : (
+      <textarea
+        key={itemIdx}
+        className="heading-textarea"
+        style={{
+          color: item.style.color || "#000",
+          textAlign: item.style.textAlign || "right",
+          direction: item.style.direction || "rtl",
+          fontSize: item.style.fontSize ? `${item.style.fontSize}px` : "20px",
+          fontWeight: item.style.fontWeight || "bold",
+          width: "100%",
+          backgroundColor: "transparent",
+          border: "none",
+          resize: "none",
+          outline: "none",
+        }}
+        value={item.content}
+        onChange={(e) => handleTextChange(e, paraIdx, itemIdx, rowIdx)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setActiveParagraph(paraIdx);
+          setActiveRow(rowIdx);
+          setActiveElement(itemIdx);
+          setIsImageSelected(false);
+          setActivePopup(null);
+        }}
+      />
+    );
+  }
+  
   if (item.type === "image") {
     return (
+
       <div
         key={itemIdx}
         className={`image-element ${

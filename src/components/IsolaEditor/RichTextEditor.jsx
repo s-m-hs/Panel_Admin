@@ -107,7 +107,44 @@ const RichTextEditor = ({ bodyString }) => {
     );
   };
 
-  
+  const handleHeadingChange = (headingType) => {
+  setParagraphs((prev) =>
+    prev.map((para, pIdx) => {
+      if (pIdx !== activeParagraph) return para;
+
+      return {
+        ...para,
+        elements: para.elements.map((el, eIdx) => {
+          if (activeRow !== null) {
+            if (eIdx !== activeRow) return el;
+
+            return {
+              ...el,
+              elements: el.elements.map((contentItem, idx) =>
+                idx === activeElement
+                  ? {
+                      ...contentItem,
+                      type: contentItem.type === headingType ? "text" : headingType,
+                    }
+                  : contentItem
+              ),
+            };
+          } else {
+            return eIdx === activeElement
+              ? {
+                  ...el,
+                  type: el.type === headingType ? "text" : headingType,
+                }
+              : el;
+          }
+        }),
+      };
+    })
+  );
+
+  setActivePopup(null);
+};
+
   const addNewParagraph = () => {
     setParagraphs((prev) => [
       ...prev,
@@ -929,6 +966,7 @@ const RichTextEditor = ({ bodyString }) => {
         )}
 
         <Toolbar
+        handleHeadingChange={handleHeadingChange}
         handleHeadingToggle={handleHeadingToggle}
           addNewParagraph={addNewParagraph}
           addNewRow={addNewRow}

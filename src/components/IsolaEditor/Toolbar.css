@@ -170,7 +170,21 @@
 }
 
 .h1Class{
-  opacity: 0.5;;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  min-height: 40px;
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease}
+
+.icon-button-container select{
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+.icon-button-container select option{
+  /* border: none; */
 }
 
 /* Responsive adjustments */
