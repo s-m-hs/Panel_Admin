@@ -1,7 +1,7 @@
 // src/components/ParagraphContent/ParagraphContent.jsx
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./ParagraphContent.css";
-import { EdiContext } from "../../context/CmsContext";
+import { CmsContext, EdiContext } from "../../context/CmsContext";
 
 const ParagraphContent = ({
   item,
@@ -22,6 +22,12 @@ const ParagraphContent = ({
   setParagraphs,
   isViewMode = false
 }) => {
+    let{setIsolaSave}=useContext(CmsContext)
+    let {setToggleHText,toggleHText}=useContext(EdiContext)
+
+
+  
+
   const handleTextChange = (e, paraIdx, itemIdx, rowIdx) => {
     if (isViewMode) return;
     
@@ -69,8 +75,12 @@ const ParagraphContent = ({
     }
   };
 
-  if (item.type === "text") {
-    const Element = isViewMode ? 'div' : 'textarea';
+  if (item.type === "text" || item.type === "h1") {
+    const Element = isViewMode
+    ? item.type === "h1"
+      ? "h1"
+      : "div"
+    : "textarea";
     return (
       <Element
         key={itemIdx}
@@ -86,10 +96,12 @@ const ParagraphContent = ({
           textAlign: item.style.textAlign || "right",
           direction: item.style.direction || "rtl",
           color: item.style.color || "#000",
-          fontSize: item.style.fontSize
-            ? `${item.style.fontSize}px`
-            : "14px",
-          fontWeight: item.style.fontWeight || "normal",
+          // fontSize: item.style.fontSize
+          //   ? `${item.style.fontSize}px`
+          //   : "14px",
+          // fontWeight: item.style.fontWeight || "normal",
+          fontSize: item.type === "h1" ? "24px" : item.style.fontSize ? `${item.style.fontSize}px` : "14px",
+          fontWeight: item.type === "h1" ? "bold" : item.style.fontWeight || "normal",
           width: `${item.style.width}px`,
           height: isViewMode ? "auto" : `${item.style.height}px`,
           maxWidth: item.style.maxWidth || "100%",
@@ -204,7 +216,8 @@ const ParagraphContent = ({
         : "flex-start";
 
     return (
-      <div
+      <>
+          <div
         key={itemIdx}
         className={`row-element ${
           !isViewMode && activeParagraph === paraIdx && activeRow === itemIdx
@@ -264,7 +277,11 @@ const ParagraphContent = ({
             isViewMode={isViewMode}
           />
         ))}
+
       </div>
+
+      </>
+  
     );
   }
 

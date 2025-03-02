@@ -333,6 +333,9 @@ ApiPostX('/api/Customer/addCustomerWAuyth',headerAuth,obj,function () {
     return () => cmsContext.setFlagClass(true)
 
   }, [])
+  
+  console.log(customerArray)
+  
   return (
     <div className='container '>
       <div className="row">

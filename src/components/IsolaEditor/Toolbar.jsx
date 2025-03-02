@@ -48,9 +48,10 @@ const Toolbar = ({
   fontSize,
   handleFontSizeChange,
   toggleRowDirection,
-  showModal
+  showModal,
+  handleHeadingToggle
 }) => {
-  let{setShowImageDiv}=useContext(EdiContext)
+  let{setShowImageDiv,toggleHText,setToggleHText}=useContext(EdiContext)
   let{setIsolaSave}=useContext(CmsContext)
 
   // تابع برای تعیین قابلیت فعال بودن دکمه‌ها
@@ -91,6 +92,13 @@ const Toolbar = ({
         <button onClick={addNewTextField} className='toolbar-button add-text'>
           <FaPencilAlt size={16} />
           <span className='tooltip'>افزودن متن</span>
+        </button>
+      </div>
+
+      <div className={toggleHText ? "icon-button-container": 'icon-button-container h1Class' } >
+        <button onClick={handleHeadingToggle} className='toolbar-button add-text'>
+          <FaPencilAlt size={16} />h1
+          <span className='tooltip'>افزودن ssss</span>
         </button>
       </div>
 

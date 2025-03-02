@@ -26,7 +26,7 @@ const RichTextEditor = ({ bodyString }) => {
   const contentRef = useRef(null);
   const [showB, setShowB] = useState(false);
   const [fullscreenB, setFullscreenB] = useState(true);
-
+  const[toggleHText,setToggleHText]=useState(false)
 
   const [imageSettings, setImageSettings] = useState({
     // width: auto,
@@ -71,6 +71,43 @@ const RichTextEditor = ({ bodyString }) => {
     }
   };
 
+  const handleHeadingToggle = () => {
+    setParagraphs((prev) =>
+      prev.map((para, pIdx) => {
+        if (pIdx !== activeParagraph) return para; // فقط پاراگراف انتخاب‌شده تغییر کند
+
+        return {
+          ...para,
+          elements: para.elements.map((el, eIdx) => {
+            if (activeRow !== null) {
+              if (eIdx !== activeRow) return el;
+
+              return {
+                ...el,
+                elements: el.elements.map((contentItem, idx) =>
+                  idx === activeElement
+                    ? {
+                        ...contentItem,
+                        type: contentItem.type === "h1" ? "text" : "h1",
+                      }
+                    : contentItem
+                ),
+              };
+            } else {
+              return eIdx === activeElement
+                ? {
+                    ...el,
+                    type: el.type === "h1" ? "text" : "h1",
+                  }
+                : el;
+            }
+          }),
+        };
+      })
+    );
+  };
+
+  
   const addNewParagraph = () => {
     setParagraphs((prev) => [
       ...prev,
@@ -556,7 +593,7 @@ const RichTextEditor = ({ bodyString }) => {
     }
     setActivePopup(null);
   };
-
+//org=>>
   const handleBoldToggle = () => {
     setIsBold((prev) => !prev);
     if (
@@ -621,7 +658,10 @@ const RichTextEditor = ({ bodyString }) => {
     }
     setActivePopup(null);
   };
+//////////////////////////
 
+
+  /////////////////////////////
   const handleTextResize = (
     paraIdx,
     itemIdx,
@@ -879,7 +919,7 @@ const RichTextEditor = ({ bodyString }) => {
   }, [showB]);
   return (
     <EdiContext.Provider
-      value={{ showImageDiv, setShowImageDiv, isolaFlag, setIsolaFlag }}
+      value={{ showImageDiv, setShowImageDiv, isolaFlag, setIsolaFlag,toggleHText,setToggleHText }}
     >
       <div className="rich-text-editor">
         {showImageDiv && (
@@ -889,6 +929,7 @@ const RichTextEditor = ({ bodyString }) => {
         )}
 
         <Toolbar
+        handleHeadingToggle={handleHeadingToggle}
           addNewParagraph={addNewParagraph}
           addNewRow={addNewRow}
           addNewTextField={addNewTextField}

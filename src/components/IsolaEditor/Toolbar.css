@@ -169,6 +169,10 @@
   margin: 0 8px;
 }
 
+.h1Class{
+  opacity: 0.5;;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .toolbar {

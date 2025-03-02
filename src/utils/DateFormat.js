@@ -28,7 +28,7 @@ const DateFormat = ({ dateString = '' } = {}) => {
   const seconds = String(date.second()).padStart(2, '0');
 
   // بازگشت تاریخ به فرمت مورد نظر
-  return ` ${year}/${month}/${day}`;
+  return ` ${year}/${month}/${day} - ${hours}:${minutes}`;
 };
 
 export default DateFormat;
