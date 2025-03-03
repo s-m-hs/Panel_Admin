@@ -1,7 +1,8 @@
 
 // const apiUrl="http://wapi.chipyab.ir"
 
-const apiUrl="https://sapi.sanecomputer.com"
+//for sane
+const apiUrl="https://sapi.sanecomputer.com" 
 
 // const apiUrl="https://cyapi.chipyab.com"
 // const apiUrl="https://api.toloenajm.ir"
