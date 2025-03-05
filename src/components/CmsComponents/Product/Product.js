@@ -287,11 +287,10 @@ const handelUpdate=(obj)=>{
         )
         resetB(setValueB(''))
         setResetSearchbox(true)
-        setTableState(false)
-        // setPage(1)
+        // setTableState(false)
         setFlagUpdate(false)
         GetProductItem(page-1,pageCount)
-        setProductArray([])
+        // setProductArray([])
         setImgUrl('')
         setFile('')
         setFile2('')
@@ -678,7 +677,7 @@ setCteArray([])
     setResetSearchbox(true)
     setValue('update', { name: data[1], description: data[2], partNo: data[3], mfrNo: data[4], datasheetUrl: data[5], manufacture: data[8], category: data[9],price:data[10],noOffPrice:data[11],supply:data[13],categoryB:data[14],  productCode:data[15]})
     setCteArray(prev=>[...prev,data[9],data[14],data[8]])
-    setImageArray(data[12].split("*,*"))
+    setImageArray(data[12]?.split("*,*"))
 // console.log(data[12])
       }
   /////////////////////////
@@ -1166,7 +1165,7 @@ onChange={()=>{
             <div className='col-lg-2 producted-col2'>
               <div className='producted-newimg-main-div'> 
                             <div className='producted-newimg-div'>   
-                              {imgArray.length!=0 && imgArray.map(item=>
+                              {imgArray?.length!=0 && imgArray?.map(item=>
                               <>  
                               <div className='producted-newimg-imgarray-div' >
                                 {item &&  <img className='producted-newimg-arrayimg' src={item} alt="" onClick={dellIcon} />
@@ -1354,7 +1353,7 @@ onChange={()=>{
                               }</td>
 
                             <td>{item.id}</td>
-                            <td>
+                            <td className='product-editbut-div-table'>
                               <button className='btn btn-primary product-morebut' onClick={() => {
                                 modalDetailProduct(item.id, item.name, item.description, item.partNo, item.mfrNo, item.datasheetUrl, item.mainImage, item.smallImage, item.cyManufacturerId, item.cyCategoryId,item.images)
                                 setLgShow(true)
@@ -1545,7 +1544,7 @@ onChange={()=>{
                 </div>
 
 <div className='product-dateailmodal-imagesarray'>
-  {detailProduct[10] && (detailProduct[10]).split('*,*').map(item=>
+  {detailProduct[10] && (detailProduct[10])?.split('*,*').map(item=>
     <img src={item} alt="" />
   )}
 </div>

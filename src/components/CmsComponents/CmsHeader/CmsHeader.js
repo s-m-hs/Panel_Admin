@@ -90,7 +90,7 @@ useEffect(()=>{
         <div className="row cmsheader-row">
             <div className="col col-6 cmsheader-col1">
             <h4 className='cmsheader-gridviewIcon'>
-            <i class="fa-solid fa-chart-pie fa-beat fa-xs"></i> پنل مدیریت{mode.mode1 ? mode.mode1 : mode.mode2 ? mode.mode2 : ''}  
+            <i class="fa-solid fa-chart-pie fa-beat fa-xs"></i> پنل مدیریت{mode.mode}  
             </h4>
 
             </div>
@@ -104,20 +104,6 @@ useEffect(()=>{
 
 </Link> </div>
 
-{!mode.mode1 && <>
-          {/* <div className='cmsheader-div'>   <LanguageIcon /> <span className='cmsheader-span' >2</span></div>  */}
-         {/* <SettingsIcon className='cmsheader-icon' />  */}
-         {flagThem ? <button className='cmsheader-icon' onClick={changeTheme}><LightModeIcon/></button> 
-         :
-         <button className='cmsheader-icon' onClick={changeTheme}><BedtimeIcon/></button> 
-
-         }
-        
-         {/* <Avatar sx={{ width: 30, height: 30 }} className='cmsheader-icon' alt="Travis Howard" src="/images/images 3.jpg" /> */}
-</> }
-            
-          
-    
 
           <div className='cmsheader-div'> 
           <i class="fa-regular fa-circle-user fa-2xl"></i>

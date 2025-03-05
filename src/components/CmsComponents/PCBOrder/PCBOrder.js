@@ -32,7 +32,6 @@ export default function PCBOrder() {
   const classRefC = useRef();
   const classRefG = useRef();
   const [messageArray, setMessageArray] = useState([]);
-  const messageArrayRevers = messageArray.slice().reverse()
 
   const [flag, setFlag] = useState(false);
   const [file, setFile] = useState({});

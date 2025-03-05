@@ -58,14 +58,14 @@ if(data.password && data.userName){
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(obj)
+        body: JSON.stringify(obj) 
       }).then(res => {
         if (res.ok) {
           return res.json().then(
             result => {
-              console.log(result)
               localStorage.setItem('loginToken', JSON.stringify(result))
               localStorage.setItem('user', data.userName)
+              localStorage.setItem('cyRole',JSON.stringify(result.type))
               setIsLogin(true)
               Swal.fire({
                 position: "center",
@@ -118,7 +118,7 @@ console.log(err)
             }}
           >
             پنل مدیریت  
-            <div>Virsion:{BuildVirsion} {mode.mode1 ? mode.mode1.toLocaleUpperCase() : mode.mode2 ? mode.mode2.toLocaleUpperCase() : ''}</div>          
+            <div>Virsion:{BuildVirsion} { mode.mode.toLocaleUpperCase()}</div>          
             </button>
             {/* <div>{BuildVirsion} {mode.mode1 ? mode.mode1 : mode.mode2 ? mode.mode2 : ''}</div> */}
           </>

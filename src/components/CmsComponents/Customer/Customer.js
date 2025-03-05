@@ -13,7 +13,6 @@ import Swal from 'sweetalert2'
 import DotLoader from "react-spinners/DotLoader";
 import { useForm } from "react-hook-form"
 import apiUrl from '../../../utils/ApiConfig';
-import mode from '../../../utils/ModsB';
 import ApiPostX from '../../../utils/ApiServicesX/ApiPostX';
 
 

@@ -87,10 +87,10 @@ const location = useLocation();
               <div className="col col-10 col-md-10 mt-5">
                 <div className={flagClass ? 'cmsindex-maincontainer-div' : 'cmsindex-maincontainer-div-hidden'} >
 
-{!mode.mode1 && <div className='container'>
+ <div className='container'>
   <div className='row '>
     
-    <div className='col-8 cmsindex-countertile'>
+    {/* <div className='col cmsindex-countertile'>
       <div className='centerr '>
 
       <DateShow2/>
@@ -99,12 +99,8 @@ const location = useLocation();
       
       <OrderTable/>
 
-    </div>
+    </div> */}
 
-    <div className='col-4'> 
-    <CircleChart/>
-    <VerticalChart/>
-    </div>
 
   </div>
   {/* <div className='row'>
@@ -122,7 +118,7 @@ const location = useLocation();
   </div> */}
   <div className='row'></div>
 </div>
-}
+
 
 
                   {/* <h4>خانه</h4>

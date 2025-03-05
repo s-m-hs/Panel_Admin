@@ -3,7 +3,7 @@ import TableMin from '../TableMin'
 import ApiGetX2 from '../../../../utils/ApiServicesX/ApiGetX2'
 import { CmsContext } from '../../../../context/CmsContext';
 import ApiPostX4 from '../../../../utils/ApiServicesX/ApiPostX4';
-import { a } from '@table-library/react-table-library/index-a318de9b';
+import './OrderTable.css'
 
 export default function OrderTable() {
     const cmsContext = useContext(CmsContext);
@@ -25,7 +25,7 @@ useEffect(()=>{
     pageSize: 10
   }
   let obj2={
-    orderStatus: 2,
+    orderStatus: 1,
     pageNumber: 0,
     pageSize: 10
   }
@@ -58,7 +58,7 @@ const products=[
   return (
     <div className='container centerr' >
 
-      <div className='row'>
+      <div className='row ordertable-row'>
 <div className='col col-md-4'><TableMin title=' آخرین کاربران  :' users={users.length!=0 ? users.slice().reverse().slice(0,10): transactions} th1='شناسه'th2='تصویر' th3='کاربر' table='table-primary' />
 </div>
 <div className='col col-md-4'><TableMin title=' آخرین محصولات :' users={allproducts.itemList ? allproducts.itemList : products} th1='شناسه'th2='تصویر' th3='محصول' table='table-info'/>

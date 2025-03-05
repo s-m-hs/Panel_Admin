@@ -188,12 +188,16 @@ width: 100%;
 }
 .product-table td{
 
-font-size: .9cqi;
-max-width: 150px;
+/* font-size: .9cqi; */
+max-width: 100px;
 overflow: hidden;
 text-overflow: ellipsis;
 /* white-space: nowrap; */
 }
+.product-editbut-div-table{
+  max-width: 250px !important;
+}
+
 .product-img{
   cursor: pointer;
   width: 40px;
